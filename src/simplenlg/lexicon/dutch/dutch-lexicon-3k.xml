@@ -11,7 +11,6 @@
     <present3p>komen</present3p>
     <past>kwam</past>
   </word>
-
   <word>
     <base>zijn</base>
     <category>verb</category>
@@ -102,10 +101,10 @@
   </word>
 
   <!-- articles
-    Only articles for 'count nouns' are included, as non-count nouns should have their article included in the lexicon.
-    References:
-      http://taalportaal.org/taalportaal/topic/link/syntax____Dutch__np__n5__nouns5_Determiners.5.1.xml
-    -->
+  Only articles for 'count nouns' are included, as non-count nouns should have their article included in the lexicon.
+  References:
+    http://taalportaal.org/taalportaal/topic/link/syntax____Dutch__np__n5__nouns5_Determiners.5.1.xml
+  -->
   <word>
     <base>de</base>
     <category>determiner</category>
@@ -140,10 +139,10 @@
   </word>
 
   <!-- personal pronouns
-      References:
-        http://www.taalportaal.org/taalportaal/topic/pid/topic-13998813298162864
-        http://www.taalportaal.org/taalportaal/topic/pid/topic-14020545821582167#table_vj4_yrm_15
-    -->
+    References:
+      http://www.taalportaal.org/taalportaal/topic/pid/topic-13998813298162864
+      http://www.taalportaal.org/taalportaal/topic/pid/topic-14020545821582167#table_vj4_yrm_15
+  -->
   <word>
     <base>ik</base>
     <category>pronoun</category>
@@ -169,8 +168,8 @@
     <person>first</person>
     <number>singular</number>
     <discourse_function>object</discourse_function>
+    <discourse_function>indirect_object</discourse_function>
     <strong_form>mij</strong_form>
-    <reflexive/>
   </word>
   <word>
     <base>mij</base>
@@ -179,8 +178,8 @@
     <person>first</person>
     <number>singular</number>
     <discourse_function>object</discourse_function>
+    <discourse_function>indirect_object</discourse_function>
     <weak_form>me</weak_form>
-    <reflexive/>
   </word>
   <word>
     <base>jij</base>
@@ -207,8 +206,8 @@
     <person>second</person>
     <number>singular</number>
     <discourse_function>object</discourse_function>
+    <discourse_function>indirect_object</discourse_function>
     <weak_form>je</weak_form>
-    <reflexive/>
   </word>
   <word>
     <base>je</base>
@@ -217,8 +216,8 @@
     <person>second</person>
     <number>singular</number>
     <discourse_function>object</discourse_function>
+    <discourse_function>indirect_object</discourse_function>
     <strong_form>jou</strong_form>
-    <reflexive/>
   </word>
   <word>
     <base>u</base>
@@ -257,6 +256,7 @@
     <number>singular</number>
     <gender>masculine</gender>
     <discourse_function>object</discourse_function>
+    <discourse_function>indirect_object</discourse_function>
     <weak_form>'m</weak_form>
   </word>
   <word>
@@ -267,6 +267,7 @@
     <number>singular</number>
     <gender>masculine</gender>
     <discourse_function>object</discourse_function>
+    <discourse_function>indirect_object</discourse_function>
     <strong_form>hem</strong_form>
   </word>
   <word>
@@ -297,6 +298,7 @@
     <number>singular</number>
     <gender>feminine</gender>
     <discourse_function>object</discourse_function>
+    <discourse_function>indirect_object</discourse_function>
     <weak_form>'r</weak_form>
   </word>
   <word>
@@ -307,6 +309,7 @@
     <number>singular</number>
     <gender>feminine</gender>
     <discourse_function>object</discourse_function>
+    <discourse_function>indirect_object</discourse_function>
     <strong_form>haar</strong_form>
   </word>
   <word>
@@ -317,6 +320,7 @@
     <number>singular</number>
     <gender>feminine</gender>
     <discourse_function>object</discourse_function>
+    <discourse_function>indirect_object</discourse_function>
     <strong_form>haar</strong_form>
   </word>
   <word>
@@ -362,7 +366,7 @@
     <person>first</person>
     <number>plural</number>
     <discourse_function>object</discourse_function>
-    <reflexive/>
+    <discourse_function>indirect_object</discourse_function>
   </word>
   <word>
     <base>jullie</base>
@@ -378,7 +382,7 @@
     <person>second</person>
     <number>plural</number>
     <discourse_function>object</discourse_function>
-    <reflexive/>
+    <discourse_function>indirect_object</discourse_function>
   </word>
   <word>
     <base>zij</base>
@@ -405,6 +409,7 @@
     <person>third</person>
     <number>plural</number>
     <discourse_function>object</discourse_function>
+    <discourse_function>indirect_object</discourse_function>
     <weak_form>ze</weak_form>
   </word>
   <word>
@@ -428,9 +433,9 @@
   </word>
 
   <!-- demonstrative pronouns
-    References:
-      http://www.taalportaal.org/taalportaal/topic/pid/topic-13998813297389634
-    -->
+  References:
+    http://www.taalportaal.org/taalportaal/topic/pid/topic-13998813297389634
+  -->
   <word>
     <base>deze</base>
     <category>pronoun</category>
@@ -497,9 +502,9 @@
   </word>
 
   <!-- possessive pronouns
-    References:
-      http://www.taalportaal.org/taalportaal/topic/pid/topic-13998813298325238
-    -->
+  References:
+    http://www.taalportaal.org/taalportaal/topic/pid/topic-13998813298325238
+  -->
   <word>
     <base>mijn</base>
     <category>pronoun</category>
@@ -654,11 +659,11 @@
   <!-- TODO: possessives such as 'het mijne'-->
 
   <!-- possessive pronouns
-    May not be complete in terms of functions and applications.
-    References:
-      http://www.taalportaal.org/taalportaal/topic/pid/topic-13998813297548685
-      http://www.dutchgrammar.com/en/?n=Pronouns.Id10
-    -->
+  May not be complete in terms of functions and applications.
+  References:
+    http://www.taalportaal.org/taalportaal/topic/pid/topic-13998813297548685
+    http://www.dutchgrammar.com/en/?n=Pronouns.Id10
+  -->
   <word>
     <base>alles</base>
     <category>pronoun</category>
@@ -834,10 +839,10 @@
   </word>
 
   <!-- relative pronouns
-    Left out: wie, wiens, wier, hetgeen and hetwelk.
-    References:
-      http://www.taalportaal.org/taalportaal/topic/pid/topic-13998813298471931
-    -->
+  Left out: wie, wiens, wier, hetgeen and hetwelk.
+  References:
+    http://www.taalportaal.org/taalportaal/topic/pid/topic-13998813298471931
+  -->
   <word>
     <base>die</base>
     <category>pronoun</category>
@@ -908,10 +913,10 @@
 
 
   <!-- interrogative pronouns
-    These are hardcoded in SimpleNLG-NL.
-    References:
-      http://www.taalportaal.org/taalportaal/topic/pid/topic-13998813297695600
-    -->
+  These are hardcoded in SimpleNLG-NL.
+  References:
+    http://www.taalportaal.org/taalportaal/topic/pid/topic-13998813297695600
+  -->
 
 
   <!-- conjunctions -->
@@ -936,416 +941,413 @@
   </word>
 
   <!-- Added during development rounds -->
-  
-    <word>
-        <base>vrijkomen</base>
-        <category>verb</category>
-        <pastParticiple>vrijgekomen</pastParticiple>
-        <preverb>vrij</preverb>
-        <intransitive/>
-        <auxiliary_zijn/>
-    </word>
 
-    <word>
-        <base>weglopen</base>
-        <category>verb</category>
-        <past>liep weg</past>
-        <pastParticiple>weggelopen</pastParticiple>
-        <preverb>weg</preverb>
-        <transitive/>
-        <auxiliary_zijn/>
-    </word>
-    <word>
-        <base>uitvoeren</base>
-        <category>verb</category>
-        <past>voerde uit</past>
-        <pastParticiple>uitgevoerd</pastParticiple>
-        <preverb>uit</preverb>
-        <transitive/>
-        <auxiliary_hebben/>
-        <auxiliary_zijn/>
-    </word>
-    <word>
-        <base>lopen</base>
-        <category>preposition</category>
-    </word>
-    <word>
-        <base>lopen</base>
-        <category>verb</category>
-        <past>liep</past>
-        <pastParticiple>gelopen</pastParticiple>
-        <transitive/>
-        <auxiliary_hebben/>
-        <auxiliary_zijn/>
-    </word>
-    <word>
-        <base>naam</base>
-        <category>noun</category>
-        <determiner>de</determiner>
-        <gender>common</gender>
-    </word>
-    <word>
-        <base>gezicht</base>
-        <category>noun</category>
-        <determiner>het</determiner>
-        <gender>neuter</gender>
-    </word>
+  <word>
+    <base>vrijkomen</base>
+    <category>verb</category>
+    <pastParticiple>vrijgekomen</pastParticiple>
+    <preverb>vrij</preverb>
+    <intransitive/>
+    <auxiliary_zijn/>
+  </word>
 
-    <word>
-        <base>toeleggen</base>
-        <category>verb</category>
-        <past>legde toe</past>
-        <pastParticiple>toegelegd</pastParticiple>
-        <preverb>toe</preverb>
-    </word>
-    <word>
-        <base>zich</base>
-        <category>pronoun</category>
-        <pronoun_type>personal</pronoun_type>
-        <number>singular</number>
-        <person>third</person>
-        <discourse_function>object</discourse_function>
-        <reflexive/>
-    </word>
-    <word>
-        <base>zich</base>
-        <category>pronoun</category>
-        <pronoun_type>personal</pronoun_type>
-        <number>plural</number>
-        <person>third</person>
-        <discourse_function>object</discourse_function>
-        <reflexive/>
-    </word>
-    <word>
-        <base>moeten</base>
-        <category>verb</category>
-        <past>moest</past>
-    </word>
-    <word>
-        <base>album</base>
-        <category>noun</category>
-        <gender>neuter</gender>
-    </word>
-    <!--<word>-->
-        <!--<base>grijs</base>-->
-        <!--<category>adjective</category>-->
-        <!--<comparative>grijzere</comparative>-->
-    <!--</word>-->
-    <word>
-        <base>Spanjaard</base>
-        <category>noun</category>
-        <plural>Spanjaarden</plural>
-    </word>
-    <word>
-        <base>roman</base>
-        <category>noun</category>
-        <plural>romans</plural>
-    </word>
-    <word>
-        <base>weten</base>
-        <category>verb</category>
-        <past>wist</past>
-    </word>
-    <word>
-        <base>ook</base>
-        <category>adverb</category>
-        <id>E0008309</id>
-        <intensifier/>
-        <sentence_modifier/>
-        <verb_modifier/>
-    </word>
-    <word>
-        <base>verblijven</base>
-        <category>verb</category>
-        <past>verbleef</past>
-    </word>
-    <word>
-        <base>worden</base>
-        <category>verb</category>
-        <past>werd</past>
-    </word>
-    <word>
-        <base>overbrengen</base>
-        <category>verb</category>
-        <pastParticiple>overgebracht</pastParticiple>
-        <preverb>over</preverb>
-    </word>
-    <word>
-        <base>manier</base>
-        <category>noun</category>
-        <plural>manieren</plural>
-    </word>
-    <word>
-        <base>bestaan</base>
-        <category>verb</category>
-        <present1s>besta</present1s>
-        <present2s>bestaat</present2s>
-        <present3s>bestaat</present3s>
-        <present1p>bestaan</present1p>
-        <present2p>bestaan</present2p>
-        <present2p>bestaan</present2p>
-        <past>bestond</past>
-    </word>
-    <word>
-        <base>zullen</base>
-        <category>verb</category>
-        <present1s>zal</present1s>
-        <present2s>zult</present2s>
-        <present3s>zal</present3s>
-        <present1p>zullen</present1p>
-        <present2p>zullen</present2p>
-        <present3p>zullen</present3p>
-        <past1s>zou</past1s>
-        <past2s>zou</past2s>
-        <past3s>zou</past3s>
-        <past1p>zouden</past1p>
-        <past2p>zouden</past2p>
-        <past3p>zouden</past3p>
-    </word>
-    <word>
-        <base>vervangen</base>
-        <category>verb</category>
-        <past>verving</past>
-        <pastParticiple>vervangen</pastParticiple>
-    </word>
-    <word>
-        <base>kunnen</base>
-        <category>verb</category>
-        <present1s>kan</present1s>
-        <present2s>kunt</present2s>
-        <present3s>kan</present3s>
-        <present1p>kunnen</present1p>
-        <present2p>kunnen</present2p>
-        <present3p>kunnen</present3p>
-        <past1s>kon</past1s>
-        <past2s>kon</past2s>
-        <past3s>kon</past3s>
-        <past1p>konden</past1p>
-        <past2p>konden</past2p>
-        <past3p>konden</past3p>
-    </word>
-    <word>
-        <base>bereiken</base>
-        <category>verb</category>
-        <pastParticiple>bereikt</pastParticiple>
-    </word>
-    <word>
-        <base>nog</base>
-        <category>adverb</category>
-        <preposed/>
-    </word>
-    <word>
-        <base>voortzetten</base>
-        <category>verb</category>
-        <past>zette voort</past>
-        <preverb>voort</preverb>
-    </word>
-    <word>
-        <base>bijna</base>
-        <category>adverb</category>
-    </word>
-    <word>
-        <base>alle</base>
-        <category>determiner</category>
-    </word>
-    <word>
-        <base>gevangennemen</base>
-        <category>verb</category>
-        <past>nam gevangen</past>
-        <pastParticiple>gevangengenomen</pastParticiple>
-        <preverb>gevangen</preverb>
-    </word>
-    <word>
-        <base>werpen</base>
-        <category>verb</category>
-        <past>wierp</past>
-        <pastParticiple>geworpen</pastParticiple>
-    </word>
-    <word>
-        <base>sluiten</base>
-        <category>verb</category>
-        <past>sloten</past>
-        <pastParticiple>gesloten</pastParticiple>
-    </word>
-    <word>
-        <base>meespelen</base>
-        <category>verb</category>
-        <past>speelde mee</past>
-        <preverb>mee</preverb>
-    </word>
-    <word>
-        <base>film</base>
-        <category>noun</category>
-        <plural>films</plural>
-    </word>
-    <word>
-        <base>gaan</base>
-        <category>verb</category>
-        <present1s>ga</present1s>
-        <present2s>gaat</present2s>
-        <present3s>gaat</present3s>
-        <present1p>gaan</present1p>
-        <present2p>gaan</present2p>
-        <present3p>gaan</present3p>
-        <past>ging</past>
-    </word>
-    <word>
-        <base>als</base>
-        <category>adverb</category>
-        <preposed/>
-    </word>
-    <word>
-        <base>krijgen</base>
-        <category>verb</category>
-        <past1s>kreeg</past1s>
-        <past2s>kreeg</past2s>
-        <past3s>kreeg</past3s>
-        <past1p>kregen</past1p>
-        <past2p>kregen</past2p>
-        <past3p>kregen</past3p>
-        <pastParticiple>gekregen</pastParticiple>
-    </word>
-    <word>
-        <base>stemgerechtigde</base>
-        <category>noun</category>
-        <plural>stemgerechtigden</plural>
-    </word>
-    <word>
-        <base>kiezen</base>
-        <category>verb</category>
-        <past1s>koos</past1s>
-        <past2s>koos</past2s>
-        <past3s>koos</past3s>
-        <past1p>kozen</past1p>
-        <past2p>kozen</past2p>
-        <past3p>kozen</past3p>
-    </word>
-    <word>
-        <base>aanvallen</base>
-        <category>verb</category>
-        <past>viel aan</past>
-        <pastParticiple>aangevallen</pastParticiple>
-        <preverb>aan</preverb>
-    </word>
-    <word>
-        <base>komen</base>
-        <category>verb</category>
-        <present1s>kom</present1s>
-        <present2s>komt</present2s>
-        <present3s>komt</present3s>
-        <present1p>komen</present1p>
-        <present2p>komen</present2p>
-        <present3p>komen</present3p>
-        <past>kwam</past>
-    </word>
-    <word>
-        <base>aanpassen</base>
-        <category>verb</category>
-        <past>paste aan</past>
-        <preverb>aan</preverb>
-    </word>
-    <word>
-        <base>herinneren</base>
-        <category>verb</category>
-        <present1s>herinner</present1s>
-        <present2s>herinnert</present2s>
-        <present3s>herinnert</present3s>
-        <present1p>herinneren</present1p>
-        <present2p>herinneren</present2p>
-        <present3p>herinneren</present3p>
-    </word>
-    <word>
-        <base>staan</base>
-        <category>verb</category>
-        <past>stond</past>
-    </word>
-    <word>
-        <base>Barban</base>
-        <category>noun</category>
-        <plural>Barban</plural>
-    </word>
-    <word>
-        <base>station</base>
-        <category>noun</category>
-        <plural>stations</plural>
-    </word>
-    <word>
-        <base>ven</base>
-        <category>noun</category>
-        <plural>vennen</plural>
-    </word>
-    <word>
-        <base>vertrekken</base>
-        <category>verb</category>
-        <past>vertrok</past>
-    </word>
-    <word>
-        <base>sterven</base>
-        <category>verb</category>
-        <past>stierf</past>
-    </word>
-    <word>
-        <base>regelmatig</base>
-        <category>adjective</category>
-    </word>
+  <word>
+    <base>weglopen</base>
+    <category>verb</category>
+    <past>liep weg</past>
+    <pastParticiple>weggelopen</pastParticiple>
+    <preverb>weg</preverb>
+    <transitive/>
+    <auxiliary_zijn/>
+  </word>
+  <word>
+    <base>uitvoeren</base>
+    <category>verb</category>
+    <past>voerde uit</past>
+    <pastParticiple>uitgevoerd</pastParticiple>
+    <preverb>uit</preverb>
+    <transitive/>
+    <auxiliary_hebben/>
+    <auxiliary_zijn/>
+  </word>
+  <word>
+    <base>lopen</base>
+    <category>preposition</category>
+  </word>
+  <word>
+    <base>lopen</base>
+    <category>verb</category>
+    <past>liep</past>
+    <pastParticiple>gelopen</pastParticiple>
+    <transitive/>
+    <auxiliary_hebben/>
+    <auxiliary_zijn/>
+  </word>
+  <word>
+    <base>naam</base>
+    <category>noun</category>
+    <determiner>de</determiner>
+    <gender>common</gender>
+  </word>
+  <word>
+    <base>gezicht</base>
+    <category>noun</category>
+    <determiner>het</determiner>
+    <gender>neuter</gender>
+  </word>
 
-    <!-- Proof-of-concept -->
-    <word>
-        <base>vrijgeven</base>
-        <category>verb</category>
-        <pastParticiple>vrijgegeven</pastParticiple>
-        <preverb>vrij</preverb>
-    </word>
-    <word>
-        <base>geven</base>
-        <category>verb</category>
-        <past1s>gaf</past1s>
-        <past2s>gaf</past2s>
-        <past3s>gaf</past3s>
-        <past1p>gaven</past1p>
-        <past2p>gaven</past2p>
-        <past3p>gaven</past3p>
-        <pastParticiple>gegeven</pastParticiple>
-    </word>
-    <word>
-        <base>voltooien</base>
-        <category>verb</category>
-        <pastParticiple>voltooid</pastParticiple>
-    </word>
-    <word>
-        <base>taak</base>
-        <category>noun</category>
-        <gender>common</gender>
-    </word>
-    <word>
-        <base>goed</base>
-        <category>adjective</category>
-        <id>E0030153</id>
-        <comparative>beter</comparative>
-        <predicative/>
-        <qualitative/>
-        <superlative>best</superlative>
-    </word>
-    <word>
-        <base>werk</base>
-        <category>noun</category>
-        <gender>neuter</gender>
-    </word>
-    <word>
-        <base>boodschap</base>
-        <category>noun</category>
-        <gender>common</gender>
-    </word>
-    <word>
-        <base>benul</base>
-        <category>noun</category>
-        <gender>neuter</gender>
-    </word>
-    <word>
-        <base>afstuderen</base>
-        <category>verb</category>
-        <auxiliary_zijn/>
-    </word>
+  <word>
+    <base>toeleggen</base>
+    <category>verb</category>
+    <past>legde toe</past>
+    <pastParticiple>toegelegd</pastParticiple>
+    <preverb>toe</preverb>
+  </word>
+  <word>
+    <base>zich</base>
+    <category>pronoun</category>
+    <pronoun_type>personal</pronoun_type>
+    <number>singular</number>
+    <person>third</person>
+    <discourse_function>object</discourse_function>
+    <discourse_function>indirect_object</discourse_function>
+    <reflexive/>
+  </word>
+  <word>
+    <base>zich</base>
+    <category>pronoun</category>
+    <pronoun_type>personal</pronoun_type>
+    <number>plural</number>
+    <person>third</person>
+    <discourse_function>object</discourse_function>
+    <discourse_function>indirect_object</discourse_function>
+    <reflexive/>
+  </word>
+  <word>
+    <base>moeten</base>
+    <category>verb</category>
+    <past>moest</past>
+  </word>
+  <word>
+    <base>album</base>
+    <category>noun</category>
+    <gender>neuter</gender>
+  </word>
+  <word>
+    <base>Spanjaard</base>
+    <category>noun</category>
+    <plural>Spanjaarden</plural>
+  </word>
+  <word>
+    <base>roman</base>
+    <category>noun</category>
+    <plural>romans</plural>
+  </word>
+  <word>
+    <base>weten</base>
+    <category>verb</category>
+    <past>wist</past>
+  </word>
+  <word>
+    <base>ook</base>
+    <category>adverb</category>
+    <id>E0008309</id>
+    <intensifier/>
+    <sentence_modifier/>
+    <verb_modifier/>
+  </word>
+  <word>
+    <base>verblijven</base>
+    <category>verb</category>
+    <past>verbleef</past>
+  </word>
+  <word>
+    <base>worden</base>
+    <category>verb</category>
+    <past>werd</past>
+  </word>
+  <word>
+    <base>overbrengen</base>
+    <category>verb</category>
+    <pastParticiple>overgebracht</pastParticiple>
+    <preverb>over</preverb>
+  </word>
+  <word>
+    <base>manier</base>
+    <category>noun</category>
+    <plural>manieren</plural>
+  </word>
+  <word>
+    <base>bestaan</base>
+    <category>verb</category>
+    <present1s>besta</present1s>
+    <present2s>bestaat</present2s>
+    <present3s>bestaat</present3s>
+    <present1p>bestaan</present1p>
+    <present2p>bestaan</present2p>
+    <present2p>bestaan</present2p>
+    <past>bestond</past>
+  </word>
+  <word>
+    <base>zullen</base>
+    <category>verb</category>
+    <present1s>zal</present1s>
+    <present2s>zult</present2s>
+    <present3s>zal</present3s>
+    <present1p>zullen</present1p>
+    <present2p>zullen</present2p>
+    <present3p>zullen</present3p>
+    <past1s>zou</past1s>
+    <past2s>zou</past2s>
+    <past3s>zou</past3s>
+    <past1p>zouden</past1p>
+    <past2p>zouden</past2p>
+    <past3p>zouden</past3p>
+  </word>
+  <word>
+    <base>vervangen</base>
+    <category>verb</category>
+    <past>verving</past>
+    <pastParticiple>vervangen</pastParticiple>
+  </word>
+  <word>
+    <base>kunnen</base>
+    <category>verb</category>
+    <present1s>kan</present1s>
+    <present2s>kunt</present2s>
+    <present3s>kan</present3s>
+    <present1p>kunnen</present1p>
+    <present2p>kunnen</present2p>
+    <present3p>kunnen</present3p>
+    <past1s>kon</past1s>
+    <past2s>kon</past2s>
+    <past3s>kon</past3s>
+    <past1p>konden</past1p>
+    <past2p>konden</past2p>
+    <past3p>konden</past3p>
+  </word>
+  <word>
+    <base>bereiken</base>
+    <category>verb</category>
+    <pastParticiple>bereikt</pastParticiple>
+  </word>
+  <word>
+    <base>nog</base>
+    <category>adverb</category>
+    <preposed/>
+  </word>
+  <word>
+    <base>voortzetten</base>
+    <category>verb</category>
+    <past>zette voort</past>
+    <preverb>voort</preverb>
+  </word>
+  <word>
+    <base>bijna</base>
+    <category>adverb</category>
+  </word>
+  <word>
+    <base>alle</base>
+    <category>determiner</category>
+  </word>
+  <word>
+    <base>gevangennemen</base>
+    <category>verb</category>
+    <past>nam gevangen</past>
+    <pastParticiple>gevangengenomen</pastParticiple>
+    <preverb>gevangen</preverb>
+  </word>
+  <word>
+    <base>werpen</base>
+    <category>verb</category>
+    <past>wierp</past>
+    <pastParticiple>geworpen</pastParticiple>
+  </word>
+  <word>
+    <base>sluiten</base>
+    <category>verb</category>
+    <past>sloten</past>
+    <pastParticiple>gesloten</pastParticiple>
+  </word>
+  <word>
+    <base>meespelen</base>
+    <category>verb</category>
+    <past>speelde mee</past>
+    <preverb>mee</preverb>
+  </word>
+  <word>
+    <base>film</base>
+    <category>noun</category>
+    <plural>films</plural>
+  </word>
+  <word>
+    <base>gaan</base>
+    <category>verb</category>
+    <present1s>ga</present1s>
+    <present2s>gaat</present2s>
+    <present3s>gaat</present3s>
+    <present1p>gaan</present1p>
+    <present2p>gaan</present2p>
+    <present3p>gaan</present3p>
+    <past>ging</past>
+  </word>
+  <word>
+    <base>als</base>
+    <category>adverb</category>
+    <preposed/>
+  </word>
+  <word>
+    <base>krijgen</base>
+    <category>verb</category>
+    <past1s>kreeg</past1s>
+    <past2s>kreeg</past2s>
+    <past3s>kreeg</past3s>
+    <past1p>kregen</past1p>
+    <past2p>kregen</past2p>
+    <past3p>kregen</past3p>
+    <pastParticiple>gekregen</pastParticiple>
+  </word>
+  <word>
+    <base>stemgerechtigde</base>
+    <category>noun</category>
+    <plural>stemgerechtigden</plural>
+  </word>
+  <word>
+    <base>kiezen</base>
+    <category>verb</category>
+    <past1s>koos</past1s>
+    <past2s>koos</past2s>
+    <past3s>koos</past3s>
+    <past1p>kozen</past1p>
+    <past2p>kozen</past2p>
+    <past3p>kozen</past3p>
+  </word>
+  <word>
+    <base>aanvallen</base>
+    <category>verb</category>
+    <past>viel aan</past>
+    <pastParticiple>aangevallen</pastParticiple>
+    <preverb>aan</preverb>
+  </word>
+  <word>
+    <base>komen</base>
+    <category>verb</category>
+    <present1s>kom</present1s>
+    <present2s>komt</present2s>
+    <present3s>komt</present3s>
+    <present1p>komen</present1p>
+    <present2p>komen</present2p>
+    <present3p>komen</present3p>
+    <past>kwam</past>
+  </word>
+  <word>
+    <base>aanpassen</base>
+    <category>verb</category>
+    <past>paste aan</past>
+    <preverb>aan</preverb>
+  </word>
+  <word>
+    <base>herinneren</base>
+    <category>verb</category>
+    <present1s>herinner</present1s>
+    <present2s>herinnert</present2s>
+    <present3s>herinnert</present3s>
+    <present1p>herinneren</present1p>
+    <present2p>herinneren</present2p>
+    <present3p>herinneren</present3p>
+  </word>
+  <word>
+    <base>staan</base>
+    <category>verb</category>
+    <past>stond</past>
+  </word>
+  <word>
+    <base>Barban</base>
+    <category>noun</category>
+    <plural>Barban</plural>
+  </word>
+  <word>
+    <base>station</base>
+    <category>noun</category>
+    <plural>stations</plural>
+  </word>
+  <word>
+    <base>ven</base>
+    <category>noun</category>
+    <plural>vennen</plural>
+  </word>
+  <word>
+    <base>vertrekken</base>
+    <category>verb</category>
+    <past>vertrok</past>
+  </word>
+  <word>
+    <base>sterven</base>
+    <category>verb</category>
+    <past>stierf</past>
+  </word>
+  <word>
+    <base>regelmatig</base>
+    <category>adjective</category>
+  </word>
+
+  <!-- Proof-of-concept -->
+  <word>
+    <base>vrijgeven</base>
+    <category>verb</category>
+    <pastParticiple>vrijgegeven</pastParticiple>
+    <preverb>vrij</preverb>
+  </word>
+  <word>
+    <base>geven</base>
+    <category>verb</category>
+    <past1s>gaf</past1s>
+    <past2s>gaf</past2s>
+    <past3s>gaf</past3s>
+    <past1p>gaven</past1p>
+    <past2p>gaven</past2p>
+    <past3p>gaven</past3p>
+    <pastParticiple>gegeven</pastParticiple>
+  </word>
+  <word>
+    <base>voltooien</base>
+    <category>verb</category>
+    <pastParticiple>voltooid</pastParticiple>
+  </word>
+  <word>
+    <base>taak</base>
+    <category>noun</category>
+    <gender>common</gender>
+  </word>
+  <word>
+    <base>goed</base>
+    <category>adjective</category>
+    <id>E0030153</id>
+    <comparative>beter</comparative>
+    <predicative/>
+    <qualitative/>
+    <superlative>best</superlative>
+  </word>
+  <word>
+    <base>werk</base>
+    <category>noun</category>
+    <gender>neuter</gender>
+  </word>
+  <word>
+    <base>boodschap</base>
+    <category>noun</category>
+    <gender>common</gender>
+  </word>
+  <word>
+    <base>benul</base>
+    <category>noun</category>
+    <gender>neuter</gender>
+  </word>
+  <word>
+    <base>afstuderen</base>
+    <category>verb</category>
+    <auxiliary_zijn/>
+  </word>
 
   <!--
 

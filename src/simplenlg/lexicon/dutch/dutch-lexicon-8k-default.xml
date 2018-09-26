@@ -168,8 +168,8 @@
     <person>first</person>
     <number>singular</number>
     <discourse_function>object</discourse_function>
+    <discourse_function>indirect_object</discourse_function>
     <strong_form>mij</strong_form>
-    <reflexive/>
   </word>
   <word>
     <base>mij</base>
@@ -178,8 +178,8 @@
     <person>first</person>
     <number>singular</number>
     <discourse_function>object</discourse_function>
+    <discourse_function>indirect_object</discourse_function>
     <weak_form>me</weak_form>
-    <reflexive/>
   </word>
   <word>
     <base>jij</base>
@@ -206,8 +206,8 @@
     <person>second</person>
     <number>singular</number>
     <discourse_function>object</discourse_function>
+    <discourse_function>indirect_object</discourse_function>
     <weak_form>je</weak_form>
-    <reflexive/>
   </word>
   <word>
     <base>je</base>
@@ -216,8 +216,8 @@
     <person>second</person>
     <number>singular</number>
     <discourse_function>object</discourse_function>
+    <discourse_function>indirect_object</discourse_function>
     <strong_form>jou</strong_form>
-    <reflexive/>
   </word>
   <word>
     <base>u</base>
@@ -256,6 +256,7 @@
     <number>singular</number>
     <gender>masculine</gender>
     <discourse_function>object</discourse_function>
+    <discourse_function>indirect_object</discourse_function>
     <weak_form>'m</weak_form>
   </word>
   <word>
@@ -266,6 +267,7 @@
     <number>singular</number>
     <gender>masculine</gender>
     <discourse_function>object</discourse_function>
+    <discourse_function>indirect_object</discourse_function>
     <strong_form>hem</strong_form>
   </word>
   <word>
@@ -296,6 +298,7 @@
     <number>singular</number>
     <gender>feminine</gender>
     <discourse_function>object</discourse_function>
+    <discourse_function>indirect_object</discourse_function>
     <weak_form>'r</weak_form>
   </word>
   <word>
@@ -306,6 +309,7 @@
     <number>singular</number>
     <gender>feminine</gender>
     <discourse_function>object</discourse_function>
+    <discourse_function>indirect_object</discourse_function>
     <strong_form>haar</strong_form>
   </word>
   <word>
@@ -316,6 +320,7 @@
     <number>singular</number>
     <gender>feminine</gender>
     <discourse_function>object</discourse_function>
+    <discourse_function>indirect_object</discourse_function>
     <strong_form>haar</strong_form>
   </word>
   <word>
@@ -361,7 +366,7 @@
     <person>first</person>
     <number>plural</number>
     <discourse_function>object</discourse_function>
-    <reflexive/>
+    <discourse_function>indirect_object</discourse_function>
   </word>
   <word>
     <base>jullie</base>
@@ -377,7 +382,7 @@
     <person>second</person>
     <number>plural</number>
     <discourse_function>object</discourse_function>
-    <reflexive/>
+    <discourse_function>indirect_object</discourse_function>
   </word>
   <word>
     <base>zij</base>
@@ -404,6 +409,7 @@
     <person>third</person>
     <number>plural</number>
     <discourse_function>object</discourse_function>
+    <discourse_function>indirect_object</discourse_function>
     <weak_form>ze</weak_form>
   </word>
   <word>
@@ -1004,6 +1010,7 @@
         <number>singular</number>
         <person>third</person>
         <discourse_function>object</discourse_function>
+        <discourse_function>indirect_object</discourse_function>
         <reflexive/>
     </word>
     <word>
@@ -1013,6 +1020,7 @@
         <number>plural</number>
         <person>third</person>
         <discourse_function>object</discourse_function>
+        <discourse_function>indirect_object</discourse_function>
         <reflexive/>
     </word>
     <word>
@@ -1025,11 +1033,6 @@
         <category>noun</category>
         <gender>neuter</gender>
     </word>
-    <!--<word>-->
-        <!--<base>grijs</base>-->
-        <!--<category>adjective</category>-->
-        <!--<comparative>grijzere</comparative>-->
-    <!--</word>-->
     <word>
         <base>Spanjaard</base>
         <category>noun</category>

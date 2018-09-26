@@ -89,7 +89,12 @@ public class NounPhraseHelper extends AbstractNounPhraseHelper
 		
 		pronounFeatures.put(Feature.POSSESSIVE,
 				phrase.getFeatureAsBoolean(Feature.POSSESSIVE));
-		
+
+		if (phrase.hasFeature(InternalFeature.DISCOURSE_FUNCTION)) {
+			pronounFeatures.put(InternalFeature.DISCOURSE_FUNCTION,
+					phrase.getFeature(InternalFeature.DISCOURSE_FUNCTION));
+		}
+
 		NLGFactory phraseFactory = phrase.getFactory();
 		Lexicon lexicon = phraseFactory.getLexicon();
 		// search the lexicon for the right pronoun
@@ -111,7 +116,7 @@ public class NounPhraseHelper extends AbstractNounPhraseHelper
 		if (phrase.hasFeature(Feature.PASSIVE)) {
 			element.setFeature(Feature.PASSIVE, 
 					phrase.getFeature(Feature.PASSIVE));
-		}		
+		}
 
 		return element;
 	}
