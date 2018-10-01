@@ -1343,8 +1343,29 @@ public class MorphologyRules extends simplenlg.morphology.english.NonStaticMorph
 				case PLURAL:
 					if (radical.endsWith("e"))
 						return radical + "n";
-					else
+					else {
+						// remove double vowel
+						int length = radical.length();
+						String regexCVVC = ".*" // anything
+								+ "([aeiouAEIOU])\\1" // two repeated vowels
+								+ "[b-df-hj-npqstv-xzB-DF-HJ-NPQSTV-XZ]"; // not 'r', because that is handled with a suffix
+
+						// replace trailing 'f' with 'v' and 's' with 'z'
+						if (radical.matches(".*([aeiouyAEIOUY]|(ij)|(ei)|(ui)|(au)|(ou))[fsFS]")) {
+							if (radical.endsWith("f")) {
+								radical = radical.substring(0, length - 1) + "v";
+							} else if (radical.endsWith("s")) {
+								radical = radical.substring(0, length - 1) + "z";
+							}
+						}
+
+						if (radical.matches(regexCVVC)) {
+							String lastConsonant = radical.substring(length - 1);
+							String front = radical.substring(0, length - 2);
+							radical = front + lastConsonant;
+						}
 						return radical + "en";
+					}
 				default:
 					return radical;
 			}
