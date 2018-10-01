@@ -162,6 +162,7 @@ public class VerbPhraseHelper extends simplenlg.syntax.english.nonstatic.VerbPhr
 
 				if (isInSubordinatedClause) {
 					List<NLGElement> complements = phrase.getFeatureAsElementList(InternalFeature.COMPLEMENTS);
+					List<NLGElement> compsToRemove = new ArrayList<>();
 
 					for (NLGElement complement : complements) {
 						if (complement.isA(PhraseCategory.NOUN_PHRASE)
@@ -169,13 +170,13 @@ public class VerbPhraseHelper extends simplenlg.syntax.english.nonstatic.VerbPhr
 
 
 							if (!complement.hasFeature(InternalFeature.COMPLEMENTS)) {
-								if (complement.hasFeature(LexicalFeature.REFLEXIVE)) {
+								if (complement.getFeatureAsBoolean(LexicalFeature.REFLEXIVE)) {
 									realisedElement.addComponent(complement.realiseSyntax());
 								}
 							}
 
 							List<NLGElement> subComplements = complement.getFeatureAsElementList(InternalFeature.COMPLEMENTS);
-							List<NLGElement> subToRemove = new ArrayList<>();
+							List<NLGElement> subsToRemove = new ArrayList<>();
 
 							for (NLGElement subComplement : complement
 									.getFeatureAsElementList(InternalFeature.COMPLEMENTS)) {
@@ -185,13 +186,21 @@ public class VerbPhraseHelper extends simplenlg.syntax.english.nonstatic.VerbPhr
 								if (discourseFunction == DiscourseFunction.OBJECT
 										|| discourseFunction == DiscourseFunction.INDIRECT_OBJECT) {
 									realisedElement.addComponent(subComplement.realiseSyntax());
-									subToRemove.add(subComplement);
+									subsToRemove.add(subComplement);
 								}
 							}
-							subComplements.removeAll(subToRemove);
+
+							Object discourseFunction = complement.getFeature(InternalFeature.DISCOURSE_FUNCTION);
+							if (discourseFunction == DiscourseFunction.OBJECT) {
+								realisedElement.addComponent(complement.realiseSyntax());
+							}
+							compsToRemove.add(complement);
+
+							subComplements.removeAll(subsToRemove);
 							complement.setFeature(InternalFeature.COMPLEMENTS, subComplements);
 						}
 					}
+					complements.removeAll(compsToRemove);
 					phrase.setFeature(InternalFeature.COMPLEMENTS, complements);
 				}
 
