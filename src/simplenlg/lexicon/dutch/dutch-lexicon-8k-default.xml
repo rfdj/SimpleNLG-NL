@@ -1466,6 +1466,46 @@
     <category>verb</category>
     <auxiliary_hebben/>
   </word>
+  <word>
+    <base>schrijven</base>
+    <category>verb</category>
+    <past>schreef</past>
+    <pastParticiple>geschreven</pastParticiple>
+    <auxiliary_hebben/>
+    <auxiliary_zijn/>
+  </word>
+  <word>
+    <base>roepen</base>
+    <category>verb</category>
+    <past>riep</past>
+    <auxiliary_hebben/>
+    <auxiliary_zijn/>
+  </word>
+  <word>
+    <base>zeggen</base>
+    <category>verb</category>
+    <past1s>zei</past1s>
+    <past2s>zei</past2s>
+    <past3s>zei</past3s>
+    <past1p>zeiden</past1p>
+    <past2p>zeiden</past2p>
+    <past3p>zeiden</past3p>
+    <auxiliary_hebben/>
+    <auxiliary_zijn/>
+  </word>
+  <word>
+    <base>eten</base>
+    <category>verb</category>
+    <present1s>eet</present1s>
+    <present2s>eet</present2s>
+    <present3s>eet</present3s>
+    <present1p>eten</present1p>
+    <present2p>eten</present2p>
+    <present3p>eten</present3p>
+    <past>at</past>
+    <auxiliary_hebben/>
+    <auxiliary_zijn/>
+  </word>
 
 
   <!--
