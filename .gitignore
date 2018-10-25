@@ -1,8 +1,12 @@
-build
-bin
+build/
+bin/
+artifacts/
+out/
+target/
+docs/
+res/
 *.iml
-.idea
-target
+.idea/
 *.class
 .DS_Store
 .classpath
