@@ -55,6 +55,7 @@ public class NounPhraseHelper extends AbstractNounPhraseHelper
 		pronounFeatures.put(DutchLexicalFeature.PRONOUN_TYPE, PronounType.PERSONAL);
 
 		Object personValue = phrase.getFeature(Feature.PERSON);
+		Object numberValue = phrase.getFeature(Feature.NUMBER);
 		Person person;
 		if (personValue instanceof Person) {
 			pronounFeatures.put(Feature.PERSON, personValue);
@@ -66,8 +67,9 @@ public class NounPhraseHelper extends AbstractNounPhraseHelper
 			person = Person.THIRD;
 		}
 		
-		// only check gender feature for third person pronouns
-		if (person == Person.THIRD) {
+		// only check gender feature for third person singular pronouns
+		if (person == Person.THIRD
+				&& numberValue == NumberAgreement.SINGULAR) {
 			Object genderValue = phrase.getFeature(LexicalFeature.GENDER);
 			if (genderValue instanceof Gender) {
 				pronounFeatures.put(LexicalFeature.GENDER, genderValue);
@@ -78,7 +80,6 @@ public class NounPhraseHelper extends AbstractNounPhraseHelper
 			}
 		}
 		
-		Object numberValue = phrase.getFeature(Feature.NUMBER);
 		if (numberValue instanceof NumberAgreement) {
 			pronounFeatures.put(Feature.NUMBER, numberValue);
 		}
@@ -90,7 +91,8 @@ public class NounPhraseHelper extends AbstractNounPhraseHelper
 		pronounFeatures.put(Feature.POSSESSIVE,
 				phrase.getFeatureAsBoolean(Feature.POSSESSIVE));
 
-		if (phrase.hasFeature(InternalFeature.DISCOURSE_FUNCTION)) {
+		if (phrase.hasFeature(InternalFeature.DISCOURSE_FUNCTION)
+				&& phrase.getFeature(InternalFeature.DISCOURSE_FUNCTION) != DiscourseFunction.SPECIFIER) {
 			pronounFeatures.put(InternalFeature.DISCOURSE_FUNCTION,
 					phrase.getFeature(InternalFeature.DISCOURSE_FUNCTION));
 		}

@@ -607,153 +607,171 @@
   <word>
     <base>mijn</base>
     <category>pronoun</category>
-    <pronoun_type>possessive</pronoun_type>
+    <pronoun_type>personal</pronoun_type>
     <person>first</person>
     <number>singular</number>
     <weak_form>m'n</weak_form>
+    <possessive/>
   </word>
   <word>
     <base>m'n</base>
     <category>pronoun</category>
-    <pronoun_type>possessive</pronoun_type>
+    <pronoun_type>personal</pronoun_type>
     <person>first</person>
     <number>singular</number>
     <strong_form>mijn</strong_form>
+    <possessive/>
   </word>
   <word>
     <base>jouw</base>
     <category>pronoun</category>
-    <pronoun_type>possessive</pronoun_type>
+    <pronoun_type>personal</pronoun_type>
     <person>second</person>
     <number>singular</number>
     <weak_form>je</weak_form>
+    <possessive/>
   </word>
   <word>
     <base>je</base>
     <category>pronoun</category>
-    <pronoun_type>possessive</pronoun_type>
+    <pronoun_type>personal</pronoun_type>
     <person>second</person>
     <number>singular</number>
     <strong_form>jouw</strong_form>
+    <possessive/>
   </word>
   <word>
     <base>zijn</base>
     <category>pronoun</category>
-    <pronoun_type>possessive</pronoun_type>
+    <pronoun_type>personal</pronoun_type>
     <person>third</person>
     <number>singular</number>
     <gender>masculine</gender>
     <weak_form>z'n</weak_form>
+    <possessive/>
   </word>
   <word>
     <base>z'n</base>
     <category>pronoun</category>
-    <pronoun_type>possessive</pronoun_type>
+    <pronoun_type>personal</pronoun_type>
     <person>third</person>
     <number>singular</number>
     <gender>masculine</gender>
     <strong_form>zijn</strong_form>
+    <possessive/>
   </word>
   <word>
     <base>haar</base>
     <category>pronoun</category>
-    <pronoun_type>possessive</pronoun_type>
+    <pronoun_type>personal</pronoun_type>
     <person>third</person>
     <number>singular</number>
     <gender>feminine</gender>
     <weak_form>d'r</weak_form>
+    <possessive/>
   </word>
   <word>
     <base>d'r</base>
     <category>pronoun</category>
-    <pronoun_type>possessive</pronoun_type>
+    <pronoun_type>personal</pronoun_type>
     <person>third</person>
     <number>singular</number>
     <gender>feminine</gender>
     <strong_form>haar</strong_form>
+    <possessive/>
   </word>
   <word>
     <base>'r</base>
     <category>pronoun</category>
-    <pronoun_type>possessive</pronoun_type>
+    <pronoun_type>personal</pronoun_type>
     <person>third</person>
     <number>singular</number>
     <gender>feminine</gender>
     <strong_form>haar</strong_form>
+    <possessive/>
   </word>
   <word>
     <base>zijn</base>
     <category>pronoun</category>
-    <pronoun_type>possessive</pronoun_type>
+    <pronoun_type>personal</pronoun_type>
     <person>third</person>
     <number>singular</number>
     <gender>neuter</gender>
     <weak_form>z'n</weak_form>
+    <possessive/>
   </word>
   <word>
     <base>z'n</base>
     <category>pronoun</category>
-    <pronoun_type>possessive</pronoun_type>
+    <pronoun_type>personal</pronoun_type>
     <person>third</person>
     <number>singular</number>
     <gender>neuter</gender>
     <strong_form>zijn</strong_form>
+    <possessive/>
   </word>
   <word>
     <base>onze</base>
     <category>pronoun</category>
-    <pronoun_type>possessive</pronoun_type>
+    <pronoun_type>personal</pronoun_type>
     <person>first</person>
     <number>plural</number>
     <gender>common</gender>
+    <possessive/>
   </word>
   <word>
     <base>ons</base>
     <category>pronoun</category>
-    <pronoun_type>possessive</pronoun_type>
+    <pronoun_type>personal</pronoun_type>
     <person>first</person>
     <number>plural</number>
     <gender>neuter</gender>
+    <possessive/>
   </word>
   <word>
     <base>jullie</base>
     <category>pronoun</category>
-    <pronoun_type>possessive</pronoun_type>
+    <pronoun_type>personal</pronoun_type>
     <person>second</person>
     <number>plural</number>
     <weak_form>je</weak_form>
+    <possessive/>
   </word>
   <word>
     <base>je</base>
     <category>pronoun</category>
-    <pronoun_type>possessive</pronoun_type>
+    <pronoun_type>personal</pronoun_type>
     <person>second</person>
     <number>plural</number>
     <strong_form>jullie</strong_form>
+    <possessive/>
   </word>
   <word>
     <base>hun</base>
     <category>pronoun</category>
-    <pronoun_type>possessive</pronoun_type>
+    <pronoun_type>personal</pronoun_type>
     <person>third</person>
     <number>plural</number>
     <weak_form>d'r</weak_form>
+    <possessive/>
   </word>
   <word>
     <base>d'r</base>
     <category>pronoun</category>
-    <pronoun_type>possessive</pronoun_type>
+    <pronoun_type>personal</pronoun_type>
     <person>third</person>
     <number>plural</number>
     <strong_form>hun</strong_form>
+    <possessive/>
   </word>
   <word>
     <base>'r</base>
     <category>pronoun</category>
-    <pronoun_type>possessive</pronoun_type>
+    <pronoun_type>personal</pronoun_type>
     <person>third</person>
     <number>plural</number>
     <strong_form>hun</strong_form>
+    <possessive/>
   </word>
   <!-- TODO: possessives such as 'het mijne'-->
 
