@@ -235,8 +235,7 @@ public class SPhraseSpec extends PhraseElement {
 
 
 		// set head of VP to verb (if this is VPPhraseSpec, and not a coord)
-		if (verbPhraseElement != null
-				&& verbPhraseElement instanceof VPPhraseSpec)
+		if (verbPhraseElement instanceof VPPhraseSpec)
 			((VPPhraseSpec) verbPhraseElement).setVerb(verb);
 
 		/*

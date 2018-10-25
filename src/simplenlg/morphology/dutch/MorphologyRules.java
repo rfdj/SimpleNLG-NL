@@ -695,7 +695,7 @@ public class MorphologyRules extends simplenlg.morphology.english.NonStaticMorph
 		}
 			
 		// base form from baseWord if it exists, otherwise from element
-		String baseForm = getBaseForm(element, baseWord);
+		String baseForm = getBaseForm(element, baseWord).replace("|", "");
 		String originalBaseForm = baseForm;
 		String SCVMainVerb = "";
 		String SCVPreVerb = "";
@@ -1061,8 +1061,6 @@ public class MorphologyRules extends simplenlg.morphology.english.NonStaticMorph
         String radical = multReturns.radical;
 
         String presentVerb = baseForm;
-
-        //FORDUTCH
 
         switch ( number ) {
             case SINGULAR: case BOTH:

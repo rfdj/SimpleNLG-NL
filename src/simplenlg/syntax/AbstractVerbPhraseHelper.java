@@ -168,12 +168,6 @@ public abstract class AbstractVerbPhraseHelper {
 					.getFeature(Feature.INTERROGATIVE_TYPE));
 			currentElement = main.realiseSyntax();
 
-			// added by rfdj
-            String preVerb = phrase.getFeatureAsString(DutchFeature.PREVERB);
-            if (preVerb != null && !"PAST_PARTICIPLE".equals(phrase.getFeatureAsString(Feature.FORM))) {
-				phrase.addPostModifier(preVerb);
-			}
-
 			if (currentElement != null) {
 				realisedElement.addComponent(currentElement);
 			}

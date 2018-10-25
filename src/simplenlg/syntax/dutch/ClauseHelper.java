@@ -28,6 +28,7 @@ import simplenlg.framework.*;
 import simplenlg.phrasespec.NPPhraseSpec;
 import simplenlg.phrasespec.PPPhraseSpec;
 import simplenlg.phrasespec.SPhraseSpec;
+import simplenlg.phrasespec.VPPhraseSpec;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -622,6 +623,45 @@ public class ClauseHelper extends simplenlg.syntax.english.nonstatic.ClauseHelpe
 
 			if (verbElement == null) {
 				verbElement = phrase.getHead();
+			}
+
+			if (ClauseStatus.SUBORDINATE == phrase.getFeature(InternalFeature.CLAUSE_STATUS)) {
+				// Subordinate clause
+				// SOV ordering:
+
+				// CLAUSE-INITIAL FIELD
+				// subject
+
+				// VERB-SECOND FIELD
+				// (empty)
+
+				// MIDDLE FIELD
+
+				// CLAUSE-FINAL FIELD
+				// finite verb
+				// non-finite verbs
+
+				// POSTVERBAL FIELD
+
+			} else {
+				// Main clause
+				// V2 ordering:
+
+				// CLAUSE-INITIAL FIELD
+				// subject
+
+				// VERB-SECOND FIELD
+				// finite verb
+
+				// MIDDLE FIELD
+				// anything, but not clausal arguments
+
+				// CLAUSE-FINAL FIELD
+				// non-finite verbs
+
+				// POSTVERBAL FIELD
+				// pp, clauses, some adverbs
+
 			}
 
 			checkClausalSubjects(phrase);

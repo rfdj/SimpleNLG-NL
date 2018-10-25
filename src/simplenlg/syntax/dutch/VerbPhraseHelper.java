@@ -18,6 +18,7 @@
  */
 package simplenlg.syntax.dutch;
 
+import com.sun.imageio.plugins.jpeg.JPEGImageReaderResources;
 import simplenlg.features.*;
 import simplenlg.features.dutch.DutchFeature;
 import simplenlg.features.dutch.DutchInternalFeature;
@@ -48,6 +49,33 @@ import java.util.Stack;
  * @author vaudrypl, rfdj
  */
 public class VerbPhraseHelper extends simplenlg.syntax.english.nonstatic.VerbPhraseHelper {
+
+	/**
+	 * Class used to return all parts of a verb phrase separately
+	 */
+	class RealiseVerbPhraseReturn {
+
+		NLGElement mainVerb,
+				preObject, object, postObject,
+				preIndirectObject, indirectObject, postIndirectObject;
+		List<NLGElement> auxVerbs, complements;
+
+		RealiseVerbPhraseReturn(NLGElement mainVerb, List<NLGElement> auxVerbs,
+								NLGElement preObject, NLGElement object, NLGElement postObject,
+								NLGElement preIndirectObject, NLGElement indirectObject, NLGElement postIndirectObject,
+								List<NLGElement> complements) {
+			this.mainVerb = mainVerb;
+			this.auxVerbs = auxVerbs;
+			this.preObject = preObject;
+			this.object = object;
+			this.postObject = postObject;
+			this.preIndirectObject = preIndirectObject;
+			this.indirectObject = indirectObject;
+			this.postIndirectObject = postIndirectObject;
+			this.complements = complements;
+
+		}
+	}
 
 	/**
 	 * The main method for realising verb phrases.
@@ -81,17 +109,16 @@ public class VerbPhraseHelper extends simplenlg.syntax.english.nonstatic.VerbPhr
 
 			if (!mainVerbRealisation.isEmpty()) {
 
-
+				NLGElement parent = phrase.getParent();
 				NLGElement verb = mainVerbRealisation.peek();
 				Object verbForm = verb.getFeature(Feature.FORM);
 
-
+				// Complementiser
 				if (phrase.hasFeature(DutchFeature.TE_INFINITIVE) && phrase.hasFeature(Feature.COMPLEMENTISER)) {
 					realisedElement.addComponent(phrase.getFeatureAsElement(Feature.COMPLEMENTISER));
 				}
 
-				// First realise reflexive pronouns, which are set as complements
-				NLGElement parent = phrase.getParent();
+				// Reflexive pronouns, which are set as complements
 				if (phrase.getFeatureAsBoolean(Feature.PERFECT)
 						|| parent.getFeatureAsBoolean(Feature.PERFECT)
 						|| Tense.FUTURE.equals(phrase.getFeature(Feature.TENSE))
@@ -101,19 +128,18 @@ public class VerbPhraseHelper extends simplenlg.syntax.english.nonstatic.VerbPhr
 					realiseReflexivePronouns(phrase, realisedElement);
 				}
 
+				// Complements
 				if (phrase.hasFeature(DutchFeature.TE_INFINITIVE)) {
 					realiseComplements(phrase, realisedElement);
 				}
 
-
 				if (parent.hasFeature(DutchFeature.RELATIVE_PHRASE)) {
 
+					// Complements
 					List<NLGElement> complements = phrase.getHead().getFeatureAsElementList(InternalFeature.COMPLEMENTS);
 					List<NLGElement> toRemove = new ArrayList<>();
 
-
 					for (NLGElement complement : complements) {
-
 
 						// Add premodifiers
 						List<NLGElement> preModifiers = complement.getFeatureAsElementList(InternalFeature.PREMODIFIERS);
@@ -126,23 +152,8 @@ public class VerbPhraseHelper extends simplenlg.syntax.english.nonstatic.VerbPhr
 						preModifiers.removeAll(preModToRemove);
 						complement.setFeature(InternalFeature.PREMODIFIERS, preModifiers);
 
-
 						// Add subcomplements
-						List<NLGElement> subComplements = complement.getFeatureAsElementList(InternalFeature.COMPLEMENTS);
-						List<NLGElement> subToRemove = new ArrayList<>();
-
-						for (NLGElement subComplement : subComplements) {
-
-							Object discourseFunction = subComplement.getFeature(InternalFeature.DISCOURSE_FUNCTION);
-							if (discourseFunction == DiscourseFunction.OBJECT
-									|| discourseFunction == DiscourseFunction.INDIRECT_OBJECT) {
-								realisedElement.addComponent(subComplement.realiseSyntax());
-								subToRemove.add(subComplement);
-							}
-						}
-
-						subComplements.removeAll(subToRemove);
-						complement.setFeature(InternalFeature.COMPLEMENTS, subComplements);
+						realiseObjectsOfElement(realisedElement, complement);
 
 						toRemove.add(complement);
 					}
@@ -175,35 +186,22 @@ public class VerbPhraseHelper extends simplenlg.syntax.english.nonstatic.VerbPhr
 								}
 							}
 
-							List<NLGElement> subComplements = complement.getFeatureAsElementList(InternalFeature.COMPLEMENTS);
-							List<NLGElement> subsToRemove = new ArrayList<>();
-
-							for (NLGElement subComplement : complement
-									.getFeatureAsElementList(InternalFeature.COMPLEMENTS)) {
-
-
-								Object discourseFunction = subComplement.getFeature(InternalFeature.DISCOURSE_FUNCTION);
-								if (discourseFunction == DiscourseFunction.OBJECT
-										|| discourseFunction == DiscourseFunction.INDIRECT_OBJECT) {
-									realisedElement.addComponent(subComplement.realiseSyntax());
-									subsToRemove.add(subComplement);
-								}
-							}
+							// Realise subcomplements
+							realiseObjectsOfElement(realisedElement, complement);
 
 							Object discourseFunction = complement.getFeature(InternalFeature.DISCOURSE_FUNCTION);
 							if (discourseFunction == DiscourseFunction.OBJECT) {
 								realisedElement.addComponent(complement.realiseSyntax());
 							}
-							compsToRemove.add(complement);
 
-							subComplements.removeAll(subsToRemove);
-							complement.setFeature(InternalFeature.COMPLEMENTS, subComplements);
+							compsToRemove.add(complement);
 						}
 					}
 					complements.removeAll(compsToRemove);
 					phrase.setFeature(InternalFeature.COMPLEMENTS, complements);
 				}
 
+				// If we should realise auxiliary verbs
 				if ((!phrase.hasFeature(InternalFeature.REALISE_AUXILIARY)
 						|| phrase.getFeatureAsBoolean(InternalFeature.REALISE_AUXILIARY))
 						&& !auxiliaryRealisation.isEmpty()) {
@@ -211,11 +209,11 @@ public class VerbPhraseHelper extends simplenlg.syntax.english.nonstatic.VerbPhr
 					realiseAuxiliaries(realisedElement,
 							auxiliaryRealisation);
 
-					// Realise objects and remove them from the complements list
+					// Realise direct objects
 					if ((Tense.FUTURE.equals(phrase.getFeature(Feature.TENSE))
-							|| Tense.CONDITIONAL.equals(phrase.getFeature(Feature.TENSE))
-							|| phrase.getFeatureAsBoolean(Feature.PERFECT)
-					)
+								|| Tense.CONDITIONAL.equals(phrase.getFeature(Feature.TENSE))
+								|| phrase.getFeatureAsBoolean(Feature.PERFECT)
+							)
 							&& !phrase.getFeatureAsBoolean(Feature.PASSIVE)) {
 
 						List<NLGElement> complements = phrase.getFeatureAsElementList(InternalFeature.COMPLEMENTS);
@@ -227,20 +225,18 @@ public class VerbPhraseHelper extends simplenlg.syntax.english.nonstatic.VerbPhr
 								realisedElement.addComponent(complement.realiseSyntax());
 							}
 						}
-
 					}
-
-					realiseMainVerb(phrase, mainVerbRealisation,
-							realisedElement);
-				} else {
-					realiseMainVerb(phrase, mainVerbRealisation,
-							realisedElement);
 				}
 
+				realiseMainVerb(phrase, mainVerbRealisation,
+						realisedElement);
+
+				// `CLAUSE-INITIAL FIELD'
 				// Interrogative sentences realise the subjects between the verb and its objects
-				if ((parent.getFeature(Feature.INTERROGATIVE_TYPE) == InterrogativeType.WHY
-						|| parent.getFeature(Feature.INTERROGATIVE_TYPE) == InterrogativeType.WHO_INDIRECT_OBJECT
-						|| parent.getFeature(Feature.INTERROGATIVE_TYPE) == InterrogativeType.WHERE)) {
+				Object interrogativeType = parent.getFeature(Feature.INTERROGATIVE_TYPE);
+				if (interrogativeType == InterrogativeType.WHY
+						|| interrogativeType == InterrogativeType.WHO_INDIRECT_OBJECT
+						|| interrogativeType == InterrogativeType.WHERE) {
 
 					List<NLGElement> subjects = parent.getFeatureAsElementList(InternalFeature.SUBJECTS);
 
@@ -248,13 +244,14 @@ public class VerbPhraseHelper extends simplenlg.syntax.english.nonstatic.VerbPhr
 						realisedElement.addComponent(subject.realiseSyntax());
 					}
 				}
-
-
 			}
+
+			// 'POSTVERBAL FIELD'
 			phrase.getPhraseHelper().realiseList(realisedElement, phrase
 					.getPostModifiers(), DiscourseFunction.POST_MODIFIER);
+
 			if (!phrase.hasFeature(DutchFeature.TE_INFINITIVE)) {
-				realiseComplements(phrase, realisedElement, !mainVerbRealisation.isEmpty());
+				realiseComplements(phrase, realisedElement);
 			}
 
 		}
@@ -421,13 +418,13 @@ public class VerbPhraseHelper extends simplenlg.syntax.english.nonstatic.VerbPhr
 				}
 			}
 		}
-		
+
 		if (actualModal == null) modalWord = null;
 
 		NLGElement frontVG = grabHeadVerb(phrase, tenseValue, modal != null);
 		if (frontVG == null) return vgComponents;
 		frontVG.setFeature(Feature.TENSE, tenseValue);
-		
+
 		if (passive) {
 			frontVG = addPassiveAuxiliary(frontVG, vgComponents, phrase);
 			frontVG.setFeature(Feature.TENSE, tenseValue);
@@ -470,7 +467,7 @@ public class VerbPhraseHelper extends simplenlg.syntax.english.nonstatic.VerbPhr
 		
 		frontVG = pushIfModal(actualModal != null, phrase, frontVG,	vgComponents);
 		// insert clitics here if imperative and not negative
-		// or if there is a modal verb without clitic rising 
+		// or if there is a modal verb without clitic rising
 		NLGElement cliticDirectObject = null;
 		if (insertClitics) {
 			if (!negative && formValue == Form.IMPERATIVE) {
@@ -483,11 +480,11 @@ public class VerbPhraseHelper extends simplenlg.syntax.english.nonstatic.VerbPhr
 				}
 			}
 		}
-		
+
 		createNiet(phrase, vgComponents, frontVG, modal != null);
-		
+
 		pushModal(modalWord, phrase, vgComponents);
-		
+
 		if (frontVG != null) {
 			pushFrontVerb(phrase, vgComponents, frontVG, formValue,
 					interrogative);
@@ -525,7 +522,7 @@ public class VerbPhraseHelper extends simplenlg.syntax.english.nonstatic.VerbPhr
 	 * if there is a direct object clitic pronoun. Eventually it will
 	 * include checks for relative clause, etc.)
 	 * 
-	 * @param auxReturn
+	 * @param pastParticiple
 	 * @param cliticDirectObject
 	 */
 	protected void makePastParticipleWithAvoirAgreement(
@@ -1207,11 +1204,11 @@ public class VerbPhraseHelper extends simplenlg.syntax.english.nonstatic.VerbPhr
 					}
 				} else {
 				// Reset relativised feature if the complement was a relative phrase.
-					complement.removeFeature(FrenchInternalFeature.RELATIVISED);
+					complement.removeFeature(DutchInternalFeature.RELATIVISED);
 				}
 			}
 			// Reset the clitic selection feature after use.
-			complement.removeFeature(FrenchInternalFeature.CLITIC);
+			complement.removeFeature(DutchInternalFeature.CLITIC);
 		}
 
 		// Reference : section 657 of Grevisse (1993)
@@ -1226,40 +1223,62 @@ public class VerbPhraseHelper extends simplenlg.syntax.english.nonstatic.VerbPhr
 			if (numberOfWordIndirects <= numberOfWordUnknowns) {
 				// normal order
 				addDirectObjects(directs, phrase, realisedElement);
-				realisePreverb(phrase, realisedElement, phraseHasMainVerb);
+				realisePreverb(phrase, realisedElement);
 				addIndirectObjects(indirects, phrase, realisedElement);
 				addUnknownComplements(unknowns, phrase, realisedElement);
 			} else if (numberOfWordDirects <= numberOfWordUnknowns) {
 				addDirectObjects(directs, phrase, realisedElement);
-				realisePreverb(phrase, realisedElement, phraseHasMainVerb);
+				realisePreverb(phrase, realisedElement);
 				addUnknownComplements(unknowns, phrase, realisedElement);
 				addIndirectObjects(indirects, phrase, realisedElement);
 			} else {
 				addUnknownComplements(unknowns, phrase, realisedElement);
 				addDirectObjects(directs, phrase, realisedElement);
-				realisePreverb(phrase, realisedElement, phraseHasMainVerb);
+				realisePreverb(phrase, realisedElement);
 				addIndirectObjects(indirects, phrase, realisedElement);
 			}
 		} else {
 			if (numberOfWordDirects <= numberOfWordUnknowns) {
 				addIndirectObjects(indirects, phrase, realisedElement);
 				addDirectObjects(directs, phrase, realisedElement);
-				realisePreverb(phrase, realisedElement, phraseHasMainVerb);
+				realisePreverb(phrase, realisedElement);
 				addUnknownComplements(unknowns, phrase, realisedElement);
 			} else if (numberOfWordIndirects <= numberOfWordUnknowns) { //here
 				addIndirectObjects(indirects, phrase, realisedElement);
 				addUnknownComplements(unknowns, phrase, realisedElement);
 				addDirectObjects(directs, phrase, realisedElement);
-				realisePreverb(phrase, realisedElement, phraseHasMainVerb);
+				realisePreverb(phrase, realisedElement);
 			} else {
 				addUnknownComplements(unknowns, phrase, realisedElement);
 				addIndirectObjects(indirects, phrase, realisedElement);
 				addDirectObjects(directs, phrase, realisedElement);
-				realisePreverb(phrase, realisedElement, phraseHasMainVerb);
+				realisePreverb(phrase, realisedElement);
 			}
 		}
 	}
 
+	/**
+	 * Realise the direct and indirect objects of any NLGElement and removes them from the complements list.
+	 *
+	 * @param element the element which has objects
+	 */
+	protected void realiseObjectsOfElement(ListElement realisedElement, NLGElement element) {
+		List<NLGElement> complements = element.getFeatureAsElementList(InternalFeature.COMPLEMENTS);
+		List<NLGElement> complementsToRemove = new ArrayList<>();
+
+		for (NLGElement complement : complements) {
+
+			Object discourseFunction = complement.getFeature(InternalFeature.DISCOURSE_FUNCTION);
+			if (discourseFunction == DiscourseFunction.OBJECT
+					|| discourseFunction == DiscourseFunction.INDIRECT_OBJECT) {
+				realisedElement.addComponent(complement.realiseSyntax());
+				complementsToRemove.add(complement);
+			}
+		}
+
+		complements.removeAll(complementsToRemove);
+		element.setFeature(InternalFeature.COMPLEMENTS, complements);
+	}
 
 	/**
 	 * Realises the preverb of this phrase.
@@ -1270,12 +1289,11 @@ public class VerbPhraseHelper extends simplenlg.syntax.english.nonstatic.VerbPhr
 	 *            the current realisation of the noun phrase.
 	 */
 	protected void realisePreverb(PhraseElement phrase,
-									  ListElement realisedElement, Boolean phraseHasMainVerb) {
+									  ListElement realisedElement) {
 		String preverb = phrase.getFeatureAsString(DutchFeature.PREVERB);
 		NLGElement parent = phrase.getParent();
 
 		if (parent != null
-//				&& phraseHasMainVerb
 				&& !parent.getFeatureAsBoolean(Feature.PERFECT)
 				&& !phrase.getFeatureAsBoolean(Feature.PERFECT)
 				&& !parent.getFeatureAsBoolean(Feature.PASSIVE)
@@ -1353,6 +1371,7 @@ public class VerbPhraseHelper extends simplenlg.syntax.english.nonstatic.VerbPhr
 		String mainVerb = null;
 		String preVerb = null;
 		Boolean isSCV = false;
+
 		if (baseForm == null || "".equals(baseForm))
 			baseForm = element.getBaseForm();
 
@@ -1444,6 +1463,7 @@ public class VerbPhraseHelper extends simplenlg.syntax.english.nonstatic.VerbPhr
 			this.preVerb = preVerb;
 		}
 	}
+
 	/**
 	 * Adds realised direct objects to the complements realisation
 	 * @param directs			realised direct objects
@@ -1490,7 +1510,7 @@ public class VerbPhraseHelper extends simplenlg.syntax.english.nonstatic.VerbPhr
 	 * Adds a default preposition to all indirect object noun phrases.
 	 * Checks also inside coordinated phrases.
 	 * 
-	 * @param nounPhrase
+	 * @param element the noun phrase
 	 * @return the new complement
 	 * 
 	 * @vaudrypl
@@ -1522,7 +1542,7 @@ public class VerbPhraseHelper extends simplenlg.syntax.english.nonstatic.VerbPhr
 	 * Sets the modal features.
 	 * Based on English VerbPhraseHelper
 	 * 
-	 * @param actualModal
+	 * @param modalWord
 	 *            the modal to be used.
 	 * @param phrase
 	 *            the <code>PhraseElement</code> representing this noun phrase.
@@ -1532,8 +1552,7 @@ public class VerbPhraseHelper extends simplenlg.syntax.english.nonstatic.VerbPhr
 	protected void pushModal(WordElement modalWord, PhraseElement phrase,
 			Stack<NLGElement> vgComponents) {
 		if (modalWord != null
-				&& !phrase.getFeatureAsBoolean(InternalFeature.IGNORE_MODAL)
-						.booleanValue()) {
+				&& !phrase.getFeatureAsBoolean(InternalFeature.IGNORE_MODAL)) {
 			InflectedWordElement inflectedModal = new InflectedWordElement(modalWord);
 			
 			Object form = phrase.getFeature(Feature.FORM);
