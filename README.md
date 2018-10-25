@@ -9,7 +9,9 @@ The Dutch version contains multiple lexicons based on [Wiktionary data](https://
 SimpleNLG-NL was developed as part of the master's thesis of Ruud de Jong. The thesis describing the process can be found at the [theses repository of Twente University](https://essay.utwente.nl/76411/).
 
 ## Usage
-The API is intentionally kept close to that of SimpleNLG-EnFr, which in turn is based on SimpleNLG. The [SimpleNLG wiki](https://github.com/simplenlg/simplenlg/wiki) is a good starting point. This wiki will be adapted for SimpleNLG-NL at a later stage.
+The API is intentionally kept close to that of SimpleNLG-EnFr, which in turn is based on SimpleNLG. 
+
+A basic tutorial can be found in the [wiki for SimpleNLG-NL](https://github.com/rfdj/SimpleNLG-NL/wiki) (based on the [SimpleNLG wiki](https://github.com/simplenlg/simplenlg/wiki)).
 
 One noteworthy addition is the ```DutchFeature.PREVERB``` feature. [Separable Complex Verbs](http://www.taalportaal.org/taalportaal/topic/pid/topic-13998813296768009) (SCVs) can be split into a preverb and a main verb (e.g. _vrijkomen_ is split into _vrij_ and _komen_). SimpleNLG-NL tries to detect SCVs, but in case it is unsuccessful, the user can set the feature on the verb or add a pipe in the verb input string, e.g. ```factory.createVerbPhrase("vrij|komen")```.
 
