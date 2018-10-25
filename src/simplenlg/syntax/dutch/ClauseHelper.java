@@ -625,6 +625,45 @@ public class ClauseHelper extends simplenlg.syntax.english.nonstatic.ClauseHelpe
 				verbElement = phrase.getHead();
 			}
 
+			if (ClauseStatus.SUBORDINATE == phrase.getFeature(InternalFeature.CLAUSE_STATUS)) {
+				// Subordinate clause
+				// SOV ordering:
+
+				// CLAUSE-INITIAL FIELD
+				// subject
+
+				// VERB-SECOND FIELD
+				// (empty)
+
+				// MIDDLE FIELD
+
+				// CLAUSE-FINAL FIELD
+				// finite verb
+				// non-finite verbs
+
+				// POSTVERBAL FIELD
+
+			} else {
+				// Main clause
+				// V2 ordering:
+
+				// CLAUSE-INITIAL FIELD
+				// subject
+
+				// VERB-SECOND FIELD
+				// finite verb
+
+				// MIDDLE FIELD
+				// anything, but not clausal arguments
+
+				// CLAUSE-FINAL FIELD
+				// non-finite verbs
+
+				// POSTVERBAL FIELD
+				// pp, clauses, some adverbs
+
+			}
+
 			checkClausalSubjects(phrase);
 			checkSubjectNumberPerson(phrase, verbElement);
 			checkDiscourseFunction(phrase);
@@ -652,8 +691,7 @@ public class ClauseHelper extends simplenlg.syntax.english.nonstatic.ClauseHelpe
 			if (passiveSplitVerb != null) {
 				splitVerb = passiveSplitVerb;
 			}
-			if (phrase.getHead() instanceof VPPhraseSpec)
-				realiseVerb(phrase, realisedElement, splitVerb, verbElement);
+			realiseVerb(phrase, realisedElement, splitVerb, verbElement);
 
 			if (interrogativeType instanceof InterrogativeType
 					&& interrogativeType != InterrogativeType.WHO_INDIRECT_OBJECT
