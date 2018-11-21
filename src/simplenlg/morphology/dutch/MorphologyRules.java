@@ -592,10 +592,36 @@ public class MorphologyRules extends simplenlg.morphology.english.NonStaticMorph
 		} else {
 			realised = baseForm;
 		}
-		
+
+		realised = checkPossessive(element, realised);
 		realised += getParticle(element);
-		StringElement realisedElement = new StringElement(realised.toString(), element);
+		StringElement realisedElement = new StringElement(realised, element);
 		return realisedElement;
+	}
+
+	/**
+	 * Checks to see if the noun is possessive. If it is then nouns in ending in
+	 * <em>-s</em> become <em>-s'</em> while every other noun has <em>-'s</em> appended to
+	 * the end.
+	 *
+	 * @param element
+	 *            the <code>InflectedWordElement</code>
+	 * @param realised
+	 *            the realisation of the word.
+	 * @return realised
+	 *            the new realisation of the word.
+	 */
+	private static String checkPossessive(InflectedWordElement element,
+										String realised) {
+
+		if (element.getFeatureAsBoolean(Feature.POSSESSIVE)) {
+			if (realised.charAt(realised.length() - 1) == 's') {
+				realised += "'";
+			} else {
+				realised += "'s";
+			}
+		}
+		return realised;
 	}
 
 	/**
