@@ -15733,6 +15733,8 @@
   <base>herself</base>
   <category>pronoun</category>
   <id>E0031461</id>
+  <gender>feminine</gender>
+  <reflexive/>
 </word>
 <word>
   <base>hesitate</base>
@@ -15816,6 +15818,8 @@
   <base>himself</base>
   <category>pronoun</category>
   <id>E0031687</id>
+  <gender>masculine</gender>
+  <reflexive/>
 </word>
 <word>
   <base>hint</base>
@@ -17887,6 +17891,8 @@
   <base>itself</base>
   <category>pronoun</category>
   <id>E0036120</id>
+  <gender>neuter</gender>
+  <reflexive/>
 </word>
 <word>
   <base>ivory</base>
@@ -21426,6 +21432,7 @@
   <base>myself</base>
   <category>pronoun</category>
   <id>E0041767</id>
+  <reflexive/>
 </word>
 <word>
   <base>mysterious</base>
@@ -22918,6 +22925,7 @@
   <base>ourselves</base>
   <category>pronoun</category>
   <id>E0044488</id>
+  <reflexive/>
 </word>
 <word>
   <base>out</base>
@@ -33778,6 +33786,7 @@
   <base>themselves</base>
   <category>pronoun</category>
   <id>E0060516</id>
+  <reflexive/>
 </word>
 <word>
   <base>then</base>
@@ -37624,6 +37633,11 @@
   <base>yourself</base>
   <category>pronoun</category>
   <id>E0065897</id>
+  <reflexive/>
+</word><word>
+<base>yourselves</base>
+<category>pronoun</category>
+<reflexive/>
 </word>
 <word>
   <base>youth</base>

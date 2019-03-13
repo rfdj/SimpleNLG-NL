@@ -169,6 +169,7 @@
     <number>singular</number>
     <discourse_function>object</discourse_function>
     <strong_form>mij</strong_form>
+    <reflexive/>
   </word>
   <word>
     <base>me</base> <!-- placed before strong form, as it is the generally preferred form -->
@@ -178,6 +179,7 @@
     <number>singular</number>
     <discourse_function>indirect_object</discourse_function>
     <strong_form>mij</strong_form>
+    <reflexive/>
   </word>
   <word>
     <base>mij</base>
@@ -187,6 +189,7 @@
     <number>singular</number>
     <discourse_function>object</discourse_function>
     <weak_form>me</weak_form>
+    <reflexive/>
   </word>
   <word>
     <base>mij</base>
@@ -194,8 +197,29 @@
     <pronoun_type>personal</pronoun_type>
     <person>first</person>
     <number>singular</number>
-   <discourse_function>indirect_object</discourse_function>
+    <discourse_function>indirect_object</discourse_function>
     <weak_form>me</weak_form>
+    <reflexive/>
+  </word>
+  <word>
+    <base>mezelf</base>
+    <category>pronoun</category>
+    <pronoun_type>personal</pronoun_type>
+    <person>first</person>
+    <number>singular</number>
+    <discourse_function>indirect_object</discourse_function>
+    <strong_form>mijzelf</strong_form>
+    <reflexive/>
+  </word>
+  <word>
+    <base>mijzelf</base>
+    <category>pronoun</category>
+    <pronoun_type>personal</pronoun_type>
+    <person>first</person>
+    <number>singular</number>
+    <discourse_function>indirect_object</discourse_function>
+    <weak_form>mezelf</weak_form>
+    <reflexive/>
   </word>
   <word>
     <base>jij</base>
@@ -241,6 +265,7 @@
     <number>singular</number>
     <discourse_function>object</discourse_function>
     <strong_form>jou</strong_form>
+    <reflexive/>
   </word>
   <word>
     <base>je</base>
@@ -250,6 +275,7 @@
     <number>singular</number>
     <discourse_function>indirect_object</discourse_function>
     <strong_form>jou</strong_form>
+    <reflexive/>
   </word>
   <word>
     <base>u</base>
@@ -297,7 +323,7 @@
     <person>third</person>
     <number>singular</number>
     <gender>masculine</gender>
-    <discourse_function>object</discourse_function>
+    <discourse_function>indirect_object</discourse_function>
     <weak_form>'m</weak_form>
   </word>
   <word>
@@ -390,14 +416,14 @@
     <discourse_function>object</discourse_function>
     <strong_form>haar</strong_form>
   </word>
- <word>
+  <word>
     <base>d'r</base>
     <category>pronoun</category>
     <pronoun_type>personal</pronoun_type>
     <person>third</person>
     <number>singular</number>
     <gender>feminine</gender>
-     <discourse_function>indirect_object</discourse_function>
+    <discourse_function>indirect_object</discourse_function>
     <strong_form>haar</strong_form>
   </word>
   <word>
@@ -407,6 +433,7 @@
     <person>third</person>
     <number>singular</number>
     <gender>neuter</gender>
+    <discourse_function>object</discourse_function>
     <weak_form>'t'</weak_form>
   </word>
   <word>
@@ -416,6 +443,27 @@
     <person>third</person>
     <number>singular</number>
     <gender>neuter</gender>
+    <discourse_function>object</discourse_function>
+    <strong_form>het</strong_form>
+  </word>
+  <word>
+    <base>het</base>
+    <category>pronoun</category>
+    <pronoun_type>personal</pronoun_type>
+    <person>third</person>
+    <number>singular</number>
+    <gender>neuter</gender>
+    <discourse_function>indirect_object</discourse_function>
+    <weak_form>'t'</weak_form>
+  </word>
+  <word>
+    <base>'t</base>
+    <category>pronoun</category>
+    <pronoun_type>personal</pronoun_type>
+    <person>third</person>
+    <number>singular</number>
+    <gender>neuter</gender>
+    <discourse_function>indirect_object</discourse_function>
     <strong_form>het</strong_form>
   </word>
   <word>
@@ -443,6 +491,7 @@
     <person>first</person>
     <number>plural</number>
     <discourse_function>object</discourse_function>
+    <reflexive/>
   </word>
   <word>
     <base>ons</base>
@@ -451,6 +500,25 @@
     <person>first</person>
     <number>plural</number>
     <discourse_function>indirect_object</discourse_function>
+    <reflexive/>
+  </word>
+  <word>
+    <base>onszelf</base>
+    <category>pronoun</category>
+    <pronoun_type>personal</pronoun_type>
+    <person>first</person>
+    <number>plural</number>
+    <discourse_function>object</discourse_function>
+    <reflexive/>
+  </word>
+  <word>
+    <base>onszelf</base>
+    <category>pronoun</category>
+    <pronoun_type>personal</pronoun_type>
+    <person>first</person>
+    <number>plural</number>
+    <discourse_function>indirect_object</discourse_function>
+    <reflexive/>
   </word>
   <word>
     <base>jullie</base>
@@ -466,7 +534,8 @@
     <person>second</person>
     <number>plural</number>
     <discourse_function>object</discourse_function>
- </word>
+    <reflexive/>
+  </word>
   <word>
     <base>je</base>
     <category>pronoun</category>
@@ -474,6 +543,25 @@
     <person>second</person>
     <number>plural</number>
     <discourse_function>indirect_object</discourse_function>
+    <reflexive/>
+  </word>
+  <word>
+    <base>jezelf</base>
+    <category>pronoun</category>
+    <pronoun_type>personal</pronoun_type>
+    <person>second</person>
+    <number>plural</number>
+    <discourse_function>object</discourse_function>
+    <reflexive/>
+  </word>
+  <word>
+    <base>jezelf</base>
+    <category>pronoun</category>
+    <pronoun_type>personal</pronoun_type>
+    <person>second</person>
+    <number>plural</number>
+    <discourse_function>indirect_object</discourse_function>
+    <reflexive/>
   </word>
   <word>
     <base>zij</base>
@@ -1056,9 +1144,9 @@
     <id>E0042996</id>
     <repeated_conjunction/>
   </word>
-  
+
   <!-- Added during development rounds -->
-  
+
   <word>
     <base>vrijkomen</base>
     <category>verb</category>
@@ -1119,13 +1207,13 @@
     <preverb>toe</preverb>
   </word>
   <word>
-      <base>zich</base>
-      <category>pronoun</category>
-      <pronoun_type>personal</pronoun_type>
-      <number>singular</number>
-      <person>third</person>
-      <discourse_function>object</discourse_function>
-      <reflexive/>
+    <base>zich</base>
+    <category>pronoun</category>
+    <pronoun_type>personal</pronoun_type>
+    <number>singular</number>
+    <person>third</person>
+    <discourse_function>object</discourse_function>
+    <reflexive/>
   </word>
   <word>
     <base>zich</base>
@@ -1146,13 +1234,49 @@
     <reflexive/>
   </word>
   <word>
-      <base>zich</base>
-      <category>pronoun</category>
-      <pronoun_type>personal</pronoun_type>
-      <number>plural</number>
-      <person>third</person>
-      <discourse_function>indirect_object</discourse_function>
-      <reflexive/>
+    <base>zich</base>
+    <category>pronoun</category>
+    <pronoun_type>personal</pronoun_type>
+    <number>plural</number>
+    <person>third</person>
+    <discourse_function>indirect_object</discourse_function>
+    <reflexive/>
+  </word>
+  <word>
+    <base>zichzelf</base>
+    <category>pronoun</category>
+    <pronoun_type>personal</pronoun_type>
+    <number>singular</number>
+    <person>third</person>
+    <discourse_function>object</discourse_function>
+    <reflexive/>
+  </word>
+  <word>
+    <base>zichzelf</base>
+    <category>pronoun</category>
+    <pronoun_type>personal</pronoun_type>
+    <number>singular</number>
+    <person>third</person>
+    <discourse_function>indirect_object</discourse_function>
+    <reflexive/>
+  </word>
+  <word>
+    <base>zichzelf</base>
+    <category>pronoun</category>
+    <pronoun_type>personal</pronoun_type>
+    <number>plural</number>
+    <person>third</person>
+    <discourse_function>object</discourse_function>
+    <reflexive/>
+  </word>
+  <word>
+    <base>zichzelf</base>
+    <category>pronoun</category>
+    <pronoun_type>personal</pronoun_type>
+    <number>plural</number>
+    <person>third</person>
+    <discourse_function>indirect_object</discourse_function>
+    <reflexive/>
   </word>
   <word>
     <base>moeten</base>
