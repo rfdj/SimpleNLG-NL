@@ -28,13 +28,9 @@ import simplenlg.features.NumberAgreement;
 import simplenlg.features.Pattern;
 import simplenlg.features.Person;
 import simplenlg.features.Tense;
-import simplenlg.framework.InflectedWordElement;
-import simplenlg.framework.LexicalCategory;
-import simplenlg.framework.NLGElement;
-import simplenlg.framework.PhraseCategory;
-import simplenlg.framework.StringElement;
-import simplenlg.framework.WordElement;
+import simplenlg.framework.*;
 import simplenlg.morphology.MorphologyRulesInterface;
+import simplenlg.phrasespec.SPhraseSpec;
 
 /**
  * This is a dynamic version of the abstract class MorphologyRules, with
@@ -760,9 +756,54 @@ public class NonStaticMorphologyRules implements MorphologyRulesInterface {
 				.booleanValue()) {
 			Object genderValue = element.getFeature(LexicalFeature.GENDER);
 			Object personValue = element.getFeature(Feature.PERSON);
+			Object numberValue = element.getFeature(Feature.NUMBER);
+			int numberIndex = element.isPlural() ? 1 : 0;
+
+			boolean reflexive = element.getFeatureAsBoolean(LexicalFeature.REFLEXIVE);
+			NLGElement parent = element.getParent();
+
+			// agree the reflexive pronoun with the subject
+			if (reflexive && parent != null) {
+				NLGElement grandParent =  parent.getParent();
+
+				if (grandParent != null && grandParent.getCategory().equalTo(PhraseCategory.VERB_PHRASE)) {
+
+					// Get the subject
+					NLGElement subject = grandParent;
+					boolean hasFoundSubject = false;
+					while (!hasFoundSubject) {
+						subject = subject.getParent();
+						for (NLGElement child : subject.getChildren()) {
+							if (DiscourseFunction.SUBJECT.equals(child.getFeature(InternalFeature.DISCOURSE_FUNCTION))) {
+								subject = child;
+								hasFoundSubject = true;
+							}
+						}
+					}
+
+					genderValue = subject.getFeature(LexicalFeature.GENDER);
+					personValue = subject.getFeature(Feature.PERSON);
+					numberValue = subject.getFeature(Feature.NUMBER);
+					numberIndex = NumberAgreement.PLURAL.equals(numberValue) ? 1
+							: 0;
+
+					// If the verb phrase is in imperative form,
+					// the reflexive pronoun can only be in 2S, 1P or 2P.
+					if (grandParent.getFeature(Feature.FORM) == Form.IMPERATIVE) {
+						if (numberValue == NumberAgreement.PLURAL) {
+							if (personValue != Person.FIRST && personValue != Person.SECOND) {
+								personValue = Person.SECOND;
+							}
+						} else {
+							personValue = Person.SECOND;
+						}
+					}
+				}
+			}
+			if (!(personValue instanceof Person)) personValue = Person.THIRD;
+			if (!(numberValue instanceof NumberAgreement)) numberValue = NumberAgreement.SINGULAR;
 			
 			// way of getting discourseValue changed by vaudrypl
-			NLGElement parent = element.getParent();
 			Object discourseValue = element.getFeature(InternalFeature.DISCOURSE_FUNCTION);
 			if (discourseValue == DiscourseFunction.SUBJECT && parent != null
 					&& parent.isA(PhraseCategory.NOUN_PHRASE)) {
@@ -770,7 +811,6 @@ public class NonStaticMorphologyRules implements MorphologyRulesInterface {
 			}
 			if (!(discourseValue instanceof DiscourseFunction)) discourseValue = DiscourseFunction.SUBJECT;
 
-			int numberIndex = element.isPlural() ? 1 : 0;
 			int genderIndex = (genderValue instanceof Gender) ? ((Gender) genderValue)
 					.ordinal()
 					: 2;
