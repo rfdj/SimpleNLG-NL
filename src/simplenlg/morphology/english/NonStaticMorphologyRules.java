@@ -770,14 +770,19 @@ public class NonStaticMorphologyRules implements MorphologyRulesInterface {
 
 					// Get the subject
 					NLGElement subject = grandParent;
+					NLGElement ancestor = grandParent;
 					boolean hasFoundSubject = false;
 					while (!hasFoundSubject) {
-						subject = subject.getParent();
-						for (NLGElement child : subject.getChildren()) {
-							if (DiscourseFunction.SUBJECT.equals(child.getFeature(InternalFeature.DISCOURSE_FUNCTION))) {
-								subject = child;
-								hasFoundSubject = true;
+						ancestor = ancestor.getParent();
+						if (ancestor != null) {
+							for (NLGElement child : ancestor.getChildren()) {
+								if (DiscourseFunction.SUBJECT.equals(child.getFeature(InternalFeature.DISCOURSE_FUNCTION))) {
+									subject = child;
+									hasFoundSubject = true;
+								}
 							}
+						} else {
+							hasFoundSubject = true;
 						}
 					}
 

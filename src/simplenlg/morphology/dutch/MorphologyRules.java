@@ -1581,17 +1581,28 @@ public class MorphologyRules extends simplenlg.morphology.english.NonStaticMorph
 			if (!(gender instanceof Gender) || gender == Gender.NEUTER) gender = Gender.MASCULINE;
 			
 			Object person = element.getFeature(Feature.PERSON);
-			Object number = element.getFeature(Feature.NUMBER);			
+			Object number = element.getFeature(Feature.NUMBER);
+
 			// agree the reflexive pronoun with the subject
 			if (reflexive && parent != null) {
-                NLGElement grandParent =  parent.getParent().getParent();
-                if (grandParent != null && grandParent.getCategory().equalTo(PhraseCategory.VERB_PHRASE)) {
-                    person = grandParent.getFeature(Feature.PERSON);
-                    number = grandParent.getFeature(Feature.NUMBER);
+				NLGElement verbPhrase = null;
+				NLGElement grandParent =  parent.getParent();
+				NLGElement grandGrandParent = null;
+
+				if (grandParent != null && grandParent.getCategory().equalTo(PhraseCategory.VERB_PHRASE)) {
+					verbPhrase = grandParent;
+					grandGrandParent = grandParent.getParent();
+				}
+				if (grandGrandParent != null && grandGrandParent.getCategory().equalTo(PhraseCategory.VERB_PHRASE)) {
+					verbPhrase = grandGrandParent;
+				}
+				if (verbPhrase != null) {
+                    person = verbPhrase.getFeature(Feature.PERSON);
+                    number = verbPhrase.getFeature(Feature.NUMBER);
 
                     // If the verb phrase is in imperative form,
                     // the reflexive pronoun can only be in 2S, 1P or 2P.
-                    if (grandParent.getFeature(Feature.FORM) == Form.IMPERATIVE) {
+                    if (verbPhrase.getFeature(Feature.FORM) == Form.IMPERATIVE) {
                         if (number == NumberAgreement.PLURAL) {
                             if (person != Person.FIRST && person != Person.SECOND) {
                                 person = Person.SECOND;
