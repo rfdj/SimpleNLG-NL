@@ -9,6 +9,26 @@ The Dutch version contains multiple lexicons based on [Wiktionary data](https://
 SimpleNLG-NL was developed as part of the master's thesis of Ruud de Jong. The thesis describing the process can be found at the [theses repository of Twente University](https://essay.utwente.nl/76411/).
 
 ## Usage
+To use this library, you have three options: cloning this repo, downloading [the JAR release file](https://github.com/rfdj/SimpleNLG-NL/releases), or import it with Maven using Jitpack.
+To use Jitpack, add the following repository and dependency to your POM file:
+```xml
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+```
+```xml
+    <dependencies>
+        <dependency>
+            <groupId>com.github.rfdj</groupId>
+            <artifactId>SimpleNLG-NL</artifactId>
+            <version>1.1</version>
+        </dependency>
+    </dependencies>
+```
+
 The API is intentionally kept close to that of SimpleNLG-EnFr, which in turn is based on SimpleNLG. 
 
 A basic tutorial can be found in the [wiki for SimpleNLG-NL](https://github.com/rfdj/SimpleNLG-NL/wiki) (based on the [SimpleNLG wiki](https://github.com/simplenlg/simplenlg/wiki)).
