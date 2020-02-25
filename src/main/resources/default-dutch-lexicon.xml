@@ -19580,6 +19580,12 @@
     <base>doen</base>
     <category>verb</category>
     <past>deed</past>
+      <present1s>doe</present1s>
+      <present2s>doet</present2s>
+      <present3s>doet</present3s>
+      <present1p>doen</present1p>
+      <present2p>doen</present2p>
+      <present3p>doen</present3p>
     <pastParticiple>gedaan</pastParticiple>
     <auxiliary_hebben/>
     <transitive/>

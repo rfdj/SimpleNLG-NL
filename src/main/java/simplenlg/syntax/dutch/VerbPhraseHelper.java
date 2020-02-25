@@ -18,7 +18,6 @@
  */
 package simplenlg.syntax.dutch;
 
-import com.sun.imageio.plugins.jpeg.JPEGImageReaderResources;
 import simplenlg.features.*;
 import simplenlg.features.dutch.DutchFeature;
 import simplenlg.features.dutch.DutchInternalFeature;
