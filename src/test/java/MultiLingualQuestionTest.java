@@ -45,7 +45,6 @@ public class MultiLingualQuestionTest {
         clause2.setFeature(Feature.INTERROGATIVE_TYPE, InterrogativeType.WHAT_OBJECT);
         collector.checkThat(realiser_fr.realiseSentence(clause2), equalTo("Qu'est-ce que tu penses sur Jean?"));
 
-        //SPhraseSpec clause3 = factory_nl.createClause("jij", "vinden");
         SPhraseSpec clause3 = factory_nl.createClause();
         NPPhraseSpec subject = factory_nl.createNounPhrase("JIJ");
         subject.setFeature(Feature.PRONOMINAL, true);
@@ -53,10 +52,7 @@ public class MultiLingualQuestionTest {
         clause3.setSubject(subject);
         clause3.setVerb("doen");
         clause3.setObject("dat");
-//        PPPhraseSpec aboutJan = factory_nl.createPrepositionPhrase("over", "Jan");
-//        clause3.addPostModifier(aboutJan);
         clause3.setFeature(Feature.INTERROGATIVE_TYPE, InterrogativeType.WHY);
-        //collector.checkThat(realiser_nl.realiseSentence(clause3), equalTo("Wat vind jij?"));
         collector.checkThat(realiser_nl.realiseSentence(clause3), equalTo("Waarom doe jij dat?"));
     }
 }
