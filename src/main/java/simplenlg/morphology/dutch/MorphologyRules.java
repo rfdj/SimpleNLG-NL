@@ -652,11 +652,7 @@ public class MorphologyRules extends simplenlg.morphology.english.NonStaticMorph
 		Object personValue = element.getFeature(Feature.PERSON);
 		// default person is THIRD
 		Person person = Person.THIRD;
-		//In Dutch, if the person is singular second and the phrase is a question, the verb takes the morphology of the singular first person.
-		if(personValue instanceof Person && personValue.equals(Person.SECOND) && element.hasFeature(Feature.INTERROGATIVE_TYPE)){
-			person = Person.FIRST;
-		}
-		else if (personValue instanceof Person) {
+		if (personValue instanceof Person) {
 			person = (Person) personValue;
 		}
 		
@@ -914,7 +910,10 @@ public class MorphologyRules extends simplenlg.morphology.english.NonStaticMorph
 						break;
 					case SECOND:
 						realised = element.getFeatureAsString(DutchLexicalFeature.PRESENT2S);
-						if (realised == null && baseWord != null) {
+						if(element.getParent() != null && element.getParent().getParent() != null && element.getParent().getParent().getFeatureAsBoolean("interrogative")){
+							realised = baseWord.getFeatureAsString(DutchLexicalFeature.PRESENT1S);
+						}
+						else if (realised == null && baseWord != null) {
 							realised = baseWord.getFeatureAsString(DutchLexicalFeature.PRESENT2S);
 						}
 						break;
@@ -953,10 +952,10 @@ public class MorphologyRules extends simplenlg.morphology.english.NonStaticMorph
 				// build inflected form if none was specified by the user or lexicon
 				if (realised == null) {
 				    if (SCV.isSCV) {
-                        realised = buildPresentVerb(SCVMainVerb, number, person);
+                        realised = buildPresentVerb(SCVMainVerb, number, person, element.getParent() != null && element.getParent().getParent() != null && element.getParent().getParent().getFeatureAsBoolean("interrogative"));
 
                     } else {
-                        realised = buildPresentVerb(baseForm, number, person);
+                        realised = buildPresentVerb(baseForm, number, person, element.getParent() != null && element.getParent().getParent() != null && element.getParent().getParent().getFeatureAsBoolean("interrogative"));
                     }
 				}
 			}
@@ -1083,7 +1082,7 @@ public class MorphologyRules extends simplenlg.morphology.english.NonStaticMorph
 	 * @return the inflected word.
 	 */
 	protected String buildPresentVerb(String baseForm, NumberAgreement number,
-			Person person) {
+			Person person, boolean interrogative) {
 
         // Get radical and verbEndingCategory.
         GetPresentRadicalReturn multReturns =
@@ -1098,7 +1097,13 @@ public class MorphologyRules extends simplenlg.morphology.english.NonStaticMorph
                     case FIRST:
                         presentVerb = radical;
                         break;
-                    case SECOND: case THIRD:
+                    case SECOND:
+						//In Dutch, if the person is singular second and the phrase is a question, the verb takes the morphology of the singular first person.
+                    	if(interrogative){
+							presentVerb = radical;
+							break;
+						}
+					case THIRD:
                         if (radical.endsWith("t")) {
                             presentVerb = radical;
                         } else {
