@@ -910,10 +910,19 @@ public class MorphologyRules extends simplenlg.morphology.english.NonStaticMorph
 						break;
 					case SECOND:
 						realised = element.getFeatureAsString(DutchLexicalFeature.PRESENT2S);
-						if(element.getParent() != null && element.getParent().getParent() != null && element.getParent().getParent().getFeatureAsBoolean("interrogative")){
+						//Look-up if the sentence is an interrogative type, because second singular takes another morphology
+						//Jij maakt het vs. Wat maak jij?
+						NLGElement parent = element;
+						while(parent.getParent() != null){
+							parent = parent.getParent();
+							if(parent.getCategory() == DocumentCategory.SENTENCE){
+								break;
+							}
+						}
+						if(parent.hasFeature(InternalFeature.INTERROGATIVE)){
 							realised = baseWord.getFeatureAsString(DutchLexicalFeature.PRESENT1S);
 						}
-						else if (realised == null && baseWord != null) {
+						if (realised == null && baseWord != null) {
 							realised = baseWord.getFeatureAsString(DutchLexicalFeature.PRESENT2S);
 						}
 						break;
@@ -951,11 +960,20 @@ public class MorphologyRules extends simplenlg.morphology.english.NonStaticMorph
 				}
 				// build inflected form if none was specified by the user or lexicon
 				if (realised == null) {
+					//Look-up if the sentence is an interrogative type, because second singular takes another morphology
+					//Jij maakt het vs. Wat maak jij?
+					NLGElement parent = element;
+					while(parent.getParent() != null){
+						parent = parent.getParent();
+						if(parent.getCategory() == DocumentCategory.SENTENCE){
+							break;
+						}
+					}
 				    if (SCV.isSCV) {
-                        realised = buildPresentVerb(SCVMainVerb, number, person, element.getParent() != null && element.getParent().getParent() != null && element.getParent().getParent().getFeatureAsBoolean("interrogative"));
+                        realised = buildPresentVerb(SCVMainVerb, number, person, parent.hasFeature(InternalFeature.INTERROGATIVE) && parent.getFeatureAsBoolean(InternalFeature.INTERROGATIVE));
 
                     } else {
-                        realised = buildPresentVerb(baseForm, number, person, element.getParent() != null && element.getParent().getParent() != null && element.getParent().getParent().getFeatureAsBoolean("interrogative"));
+                        realised = buildPresentVerb(baseForm, number, person, parent.hasFeature(InternalFeature.INTERROGATIVE) && parent.getFeatureAsBoolean(InternalFeature.INTERROGATIVE));
                     }
 				}
 			}
