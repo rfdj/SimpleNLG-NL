@@ -652,7 +652,11 @@ public class MorphologyRules extends simplenlg.morphology.english.NonStaticMorph
 		Object personValue = element.getFeature(Feature.PERSON);
 		// default person is THIRD
 		Person person = Person.THIRD;
-		if (personValue instanceof Person) {
+		//In Dutch, if the person is singular second and the phrase is a question, the verb takes the morphology of the singular first person.
+		if(personValue instanceof Person && personValue.equals(Person.SECOND) && element.hasFeature(Feature.INTERROGATIVE_TYPE)){
+			person = Person.FIRST;
+		}
+		else if (personValue instanceof Person) {
 			person = (Person) personValue;
 		}
 		
