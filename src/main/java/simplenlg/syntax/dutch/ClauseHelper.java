@@ -25,10 +25,7 @@ import simplenlg.features.french.FrenchFeature;
 import simplenlg.features.french.FrenchInternalFeature;
 import simplenlg.features.french.FrenchLexicalFeature;
 import simplenlg.framework.*;
-import simplenlg.phrasespec.NPPhraseSpec;
-import simplenlg.phrasespec.PPPhraseSpec;
-import simplenlg.phrasespec.SPhraseSpec;
-import simplenlg.phrasespec.VPPhraseSpec;
+import simplenlg.phrasespec.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -155,7 +152,7 @@ public class ClauseHelper extends simplenlg.syntax.english.nonstatic.ClauseHelpe
 	 * Check complements and sets FrenchLexicalFeature.NE_ONLY_NEGATION
 	 * accordingly for the verb phrase.
 	 * 
-	 * @param phrase	the verb phrase
+	 * @param verbElement	the verb phrase
 	 */
 	protected void setNeOnlyNegation(NLGElement verbElement, boolean noOnlyNegation) {
 		// check complements if subject doesn't already have the feature
@@ -437,8 +434,44 @@ public class ClauseHelper extends simplenlg.syntax.english.nonstatic.ClauseHelpe
 			NLGElement splitVerb) {
 		
 		if (!phrase.hasRelativePhrase(DiscourseFunction.SUBJECT)) {
+			if(phrase.hasFeature(Feature.INTERROGATIVE_TYPE)){
+				ListElement realisedSubject = new ListElement();
+				//Realising subject to add later
+				super.addSubjectsToFront(phrase, realisedSubject,splitVerb);
+				if(this.addSubjectAfterVerb(realisedElement,realisedSubject)){
+					return;
+				}
+			}
 			super.addSubjectsToFront(phrase, realisedElement, splitVerb);
 		}
+	}
+
+	/**
+	 * Method for adding the subject after the verb. Mainly used for Dutch interrogatives
+	 * @param realisedElement, the current list of realised elements
+	 * @param realisedSubject, the subject that has to go behind the verb
+	 */
+	private boolean addSubjectAfterVerb(ListElement realisedElement, ListElement realisedSubject){
+		List<NLGElement> alreadyRealisedElements = realisedElement.getChildren();
+		for(int vpIndex = 0; vpIndex < alreadyRealisedElements.size(); vpIndex++){
+			NLGElement alreadyRealisedElement = alreadyRealisedElements.get(vpIndex);
+			if(alreadyRealisedElement.getCategory().equalTo(PhraseCategory.VERB_PHRASE)){
+				List<NLGElement> vpComponents = alreadyRealisedElement.getChildren();
+				for(int vIndex = 0; vIndex < vpComponents.size(); vIndex++){
+					NLGElement vpComponent = vpComponents.get(vIndex);
+					if(vpComponent.getCategory().equalTo(LexicalCategory.VERB)){
+						//Add the realisedSubject directly after the first verb in the first verb phrase
+						vpComponents.add(vIndex+1,realisedSubject.getFirst());
+						//alreadyRealisedElement.
+						((ListElement) alreadyRealisedElement).setComponents(vpComponents);
+						alreadyRealisedElements.set(vpIndex,alreadyRealisedElement);
+						realisedElement.setComponents(alreadyRealisedElements);
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -578,7 +611,9 @@ public class ClauseHelper extends simplenlg.syntax.english.nonstatic.ClauseHelpe
 					if (indirectObject instanceof PPPhraseSpec) {
 						preposition = ((PPPhraseSpec) indirectObject).getPreposition();
 					}
-
+					else{
+						preposition = phraseFactory.createPrepositionPhrase("aan");
+					}
 					realiseInterrogativePreposition(preposition, realisedElement, //$NON-NLS-1$
 							phraseFactory);
 					realiseInterrogativeKeyWord("wie", realisedElement, //$NON-NLS-1$
@@ -589,12 +624,74 @@ public class ClauseHelper extends simplenlg.syntax.english.nonstatic.ClauseHelpe
 					realiseInterrogativeKeyWord("wat", realisedElement, //$NON-NLS-1$
 							phraseFactory);
 					break;
-
+//				Complex case where the preposition has to go at the back of the sentence, use WHY or HOW_COME
+//				case WHAT_FOR:
+//					realiseInterrogativeKeyWord("waar", realisedElement, //$NON-NLS-1$
+//							phraseFactory);
+//					PPPhraseSpec voor = phraseFactory.createPrepositionPhrase("voor");
+//					realiseInterrogativePreposition(voor,realisedElement,phraseFactory);
+//					break;
+				case WHEN:
+					realiseInterrogativeKeyWord("wanneer", realisedElement, //$NON-NLS-1$
+							phraseFactory);
+					break;
+				case WHICH:
+					realiseInterrogativeKeyWord("welke", realisedElement, //$NON-NLS-1$
+							phraseFactory);
+					break;
+				case WHOSE:
+					realiseInterrogativeKeyWord("van", realisedElement, //$NON-NLS-1$
+							phraseFactory);
+					realiseInterrogativeKeyWord("wie", realisedElement, //$NON-NLS-1$
+							phraseFactory);
+					break;
+				case HOW_CONDITION_QUALITY:
+					realiseInterrogativeKeyWord("hoe", realisedElement, //$NON-NLS-1$
+							phraseFactory);
+					break;
+				case HOW_ADJECTIVE:
+					realiseInterrogativeKeyWord("hoe", realisedElement, //$NON-NLS-1$
+							phraseFactory);
+					break;
+				case HOW_COME:
+					realiseInterrogativeKeyWord("hoezo", realisedElement, //$NON-NLS-1$
+							phraseFactory);
+					break;
 				default:
 					break;
 			}
 		}
 		return splitVerb;
+	}
+
+	/**
+	 * The method for adding an adjective to a HOW_ADJECTIVE question
+	 * @param adjective, the adjective to add
+	 * @param realisedElement, an element to add to the sentence
+	 * @param phraseFactory, the NLG factory
+	 */
+	public void realiseInterrogativeAdjective(NLGElement adjective, ListElement realisedElement, NLGFactory phraseFactory){
+		if (adjective != null) {
+			NLGElement currentElement = adjective.realiseSyntax();
+			if (currentElement != null) {
+				realisedElement.addComponent(currentElement);
+			}
+		}
+	}
+
+	/**
+	 * The method for adding a noun to a WHICH question
+	 * @param noun, the noun to add
+	 * @param realisedElement, an element to add to the sentence
+	 * @param phraseFactory, the NLG factory
+	 */
+	public void realiseInterrogativeNoun(NLGElement noun, ListElement realisedElement, NLGFactory phraseFactory){
+		if (noun != null) {
+			NLGElement currentElement = noun.realiseSyntax();
+			if (currentElement != null) {
+				realisedElement.addComponent(currentElement);
+			}
+		}
 	}
 
 	/**
@@ -631,9 +728,12 @@ public class ClauseHelper extends simplenlg.syntax.english.nonstatic.ClauseHelpe
 			copyFrontModifiers(phrase, verbElement);
 			addComplementiser(phrase, realisedElement);
 			addCuePhrase(phrase, realisedElement);
-
 			if (phrase.hasFeature(Feature.INTERROGATIVE_TYPE)) {
 				addInterrogativeSpecifier(phrase, realisedElement);
+
+				if(interrogativeType.equals(InterrogativeType.WHO_SUBJECT)){
+					verbElement.setFeature(Feature.PERSON,Person.THIRD);
+				}
 				splitVerb = realiseInterrogative(phrase,
 						realisedElement, phraseFactory, verbElement);
 			} else {
@@ -643,7 +743,7 @@ public class ClauseHelper extends simplenlg.syntax.english.nonstatic.ClauseHelpe
 								phrase.getFeatureAsElementList(InternalFeature.FRONT_MODIFIERS),
 								DiscourseFunction.FRONT_MODIFIER);
 			}
-			if (interrogativeType == null || interrogativeType == InterrogativeType.HOW_MANY)
+			if (interrogativeType == null)
 				addSubjectsToFront(phrase, realisedElement, splitVerb);
 
 			NLGElement passiveSplitVerb = addPassiveComplementsNumberPerson(
@@ -652,20 +752,60 @@ public class ClauseHelper extends simplenlg.syntax.english.nonstatic.ClauseHelpe
 			if (passiveSplitVerb != null)
 				splitVerb = passiveSplitVerb;
 
-			if (((SPhraseSpec) phrase).getVerb() != null)
+			if (((SPhraseSpec) phrase).getVerb() != null){
 				realiseVerb(phrase, realisedElement, splitVerb, verbElement);
+				//For these types of interrogatives, search for the object, remove it and put it in second position.
+				if(interrogativeType instanceof InterrogativeType
+					&& (interrogativeType.equals(InterrogativeType.HOW_ADJECTIVE)
+					|| interrogativeType.equals(InterrogativeType.WHICH)
+					|| interrogativeType.equals(InterrogativeType.HOW_MANY))){
+					addObjectBeforeVerb(realisedElement);
+				}
 
+			}
+
+			//In these types of interrogatives, the subject is after the verb
 			if (interrogativeType instanceof InterrogativeType
 					&& interrogativeType != InterrogativeType.WHO_INDIRECT_OBJECT
 					&& interrogativeType != InterrogativeType.WHY
 					&& interrogativeType != InterrogativeType.WHERE
-					&& interrogativeType != InterrogativeType.HOW_MANY)
+					&& interrogativeType != InterrogativeType.WHO_SUBJECT
+			)
 				addSubjectsToFront(phrase, realisedElement, splitVerb);
 
 			addPassiveSubjects(phrase, realisedElement, phraseFactory);
 		}
 		return realisedElement;
 	}
+
+	/**
+	 * This method moves adjectives in object position before the verb, which is useful
+	 * in interrogative HOW_ADJECTIVE
+	 * @param realisedElement
+	 */
+	private void addObjectBeforeVerb(ListElement realisedElement) {
+		List<NLGElement> alreadyRealisedElements = realisedElement.getChildren();
+		for(int vpIndex = 0; vpIndex < alreadyRealisedElements.size(); vpIndex++){
+			NLGElement alreadyRealisedElement = alreadyRealisedElements.get(vpIndex);
+			if(alreadyRealisedElement.getCategory().equalTo(PhraseCategory.VERB_PHRASE)){
+				List<NLGElement> vpComponents = alreadyRealisedElement.getChildren();
+				for(int vIndex = 0; vIndex < vpComponents.size(); vIndex++){
+					NLGElement vpComponent = vpComponents.get(vIndex);
+					if(vpComponent.hasFeature(InternalFeature.DISCOURSE_FUNCTION) && vpComponent.getFeature(InternalFeature.DISCOURSE_FUNCTION).equals(DiscourseFunction.OBJECT)){
+						//We add the adjective phrase to the front of the VP components, because in the
+						// HOW_ADJECTIVE, this comes always before the verb in interrogatives.
+						vpComponents.add(0,vpComponents.remove(vIndex));
+
+						((ListElement) alreadyRealisedElement).setComponents(vpComponents);
+						alreadyRealisedElements.set(vpIndex,alreadyRealisedElement);
+						realisedElement.setComponents(alreadyRealisedElements);
+						return;
+					}
+				}
+			}
+		}
+	}
+
 
 	/**
 	 * Create a copy of a noun phrase or coordinated noun phrases

@@ -128,15 +128,21 @@ public class ClauseHelper extends AbstractClauseHelper {
 				// Modified addSubjectsToFront() accordingly.
 				// phrase.removeFeature(InternalFeature.SUBJECTS);
 				break;
-
 			case HOW:
 			case WHY:
+			case WHEN:
 			case WHERE:
 				realiseInterrogativeKeyWord(type.toString().toLowerCase(),
 						realisedElement, //$NON-NLS-1$
 						phraseFactory);
 				splitVerb = realiseYesNo(phrase, verbElement,
 						phraseFactory, realisedElement);
+				break;
+			case HOW_COME:
+				realiseInterrogativeKeyWord("how", realisedElement, //$NON-NLS-1$
+						phraseFactory);
+				realiseInterrogativeKeyWord("come", realisedElement, //$NON-NLS-1$
+						phraseFactory);
 				break;
 
 			case HOW_MANY:
@@ -148,7 +154,7 @@ public class ClauseHelper extends AbstractClauseHelper {
 
 			case WHO_OBJECT:
 			case WHO_INDIRECT_OBJECT:
-				realiseInterrogativeKeyWord("who", realisedElement, //$NON-NLS-1$
+				realiseInterrogativeKeyWord("whom", realisedElement, //$NON-NLS-1$
 						phraseFactory);
 				addDoAuxiliary(phrase, phraseFactory, realisedElement);
 				break;

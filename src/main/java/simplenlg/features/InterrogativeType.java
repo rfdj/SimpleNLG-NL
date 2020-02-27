@@ -61,6 +61,7 @@ public enum InterrogativeType {
 	 * object of a phrase when the indirect object is a person. For example,
 	 * <em>John gave Mary a flower</em> becomes
 	 * <em>Who did John give a flower to?</em>
+	 * Note: Should be WHOM_INDIRECT_OBJECT
 	 */
 	WHO_INDIRECT_OBJECT,
 
@@ -68,6 +69,7 @@ public enum InterrogativeType {
 	 * This type of interrogative is a question pertaining to the object of a
 	 * phrase when the object is a person. For example,
 	 * <em>John kissed Mary</em> becomes <em>who did John kiss?</em>
+	 * Note: Should be WHOM_DIRECT_OBJECT
 	 */
 	WHO_OBJECT,
 
@@ -98,7 +100,49 @@ public enum InterrogativeType {
 	 * This represents a "how many" questions. For example
 	 * of <em>dogs chased John/em> becomes <em>How many dogs chased John</em>
 	 */
-	HOW_MANY;
+	HOW_MANY,
+
+//	/**
+//	 * This represents questions for reasons, though WHY should be used. Example:
+//	 * <em>What did you do that for?</em> opposes <em>You did that for selfless reasons</em>.
+//	 */
+//	WHAT_FOR,
+
+	/**
+	 * Asking about time. For example, <em>the meeting is at three</em> becomes
+	 * <em>When is the meeting?</em>
+	 */
+	WHEN,
+
+	/**
+	 * Asking about a finite set of choices (use WHAT for infinite) Example: <em>I chose the book about war</em>
+	 * becomes <em>Which book did you choose?</em>
+	 */
+	WHICH,
+
+	/**
+	 * Asking about ownership. Example: <em>These are my keys</em> becomes <em>Whose are these keys?</em> or <em>Whose keys are these?</em>*,
+	 * the latter is more common.
+	 */
+	WHOSE,
+
+	/**
+	 * Asking about a manner. Example: <em>My fieldtrip was awesome</em> becomes <em>How was your fieldtrip?</em>
+	 */
+	HOW_CONDITION_QUALITY,
+
+	/**
+	 * Asking about the extent or degree, you could take any ADJECTIVE as an argument. Example: <em>the car is beautiful</em> becomes
+	 * <em>How beautiful is the car?</em>
+	 */
+	HOW_ADJECTIVE,
+
+	/**
+	 * Another way of phrasing WHY questions. Example: <em>you did that for selfless reasons</em>
+	 * becomes <em>How come you did that for selfless reasons?</em>
+	 */
+	HOW_COME;
+
 
 	/**
 	 * A method to determine if the {@code InterrogativeType} is a question
