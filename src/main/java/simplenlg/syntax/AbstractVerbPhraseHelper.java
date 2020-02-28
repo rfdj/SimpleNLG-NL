@@ -20,13 +20,16 @@
 package simplenlg.syntax;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Stack;
 
+import gov.nih.nlm.nls.lvg.Util.In;
 import simplenlg.features.DiscourseFunction;
 import simplenlg.features.Feature;
 import simplenlg.features.InternalFeature;
 import simplenlg.features.InterrogativeType;
 import simplenlg.features.dutch.DutchFeature;
+import simplenlg.framework.LexicalCategory;
 import simplenlg.framework.ListElement;
 import simplenlg.framework.NLGElement;
 import simplenlg.framework.PhraseElement;
@@ -63,11 +66,12 @@ public abstract class AbstractVerbPhraseHelper {
 
 			if (!phrase.hasFeature(InternalFeature.REALISE_AUXILIARY)
 					|| phrase.getFeatureAsBoolean(InternalFeature.REALISE_AUXILIARY)
-							.booleanValue()) {
+							) {
 
 				realiseAuxiliaries(realisedElement,
 						auxiliaryRealisation);
 
+				//This shouldn't be realised if there is already a modal verb present.
 				phrase.getPhraseHelper().realiseList(realisedElement, phrase
 						.getPreModifiers(), DiscourseFunction.PRE_MODIFIER);
 
@@ -167,7 +171,23 @@ public abstract class AbstractVerbPhraseHelper {
 			main.setFeature(Feature.INTERROGATIVE_TYPE, phrase
 					.getFeature(Feature.INTERROGATIVE_TYPE));
 			currentElement = main.realiseSyntax();
+			//Determine if a modal verb is present in realised element
 
+			List<NLGElement> children = realisedElement.getChildren();
+			for(int child = 0; child < children.size(); child++){
+				if(currentElement.getChildren() != null
+						&& children.get(child).getCategory().equalTo(LexicalCategory.MODAL)){
+					//Determine if a modal verb is present in current element
+					List<NLGElement> childrenCurrent = currentElement.getChildren();
+					for(int childCurrent = 0; childCurrent < childrenCurrent.size(); childCurrent++){
+						if(childrenCurrent.get(childCurrent).getCategory().equalTo(LexicalCategory.MODAL)
+							&& childrenCurrent.get(childCurrent).getRealisation().equals(children.get(child).getRealisation())){
+							childrenCurrent.remove(childCurrent);
+						}
+					}
+					((ListElement) currentElement).setComponents(childrenCurrent);
+				}
+			}
 			if (currentElement != null) {
 				realisedElement.addComponent(currentElement);
 			}

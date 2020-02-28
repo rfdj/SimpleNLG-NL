@@ -48,11 +48,12 @@ public class DutchInterrogativeTest {
         subject.setFeature(Feature.PRONOMINAL, true);
         subject.setFeature(Feature.PERSON, Person.SECOND);
         clause.setSubject(subject);
-        clause.setVerb("denk");
-        clause.addComplement("soms");
+        clause.setVerb("presenteer");
+        clause.setObject("Jan");
         clause.setFeature(Feature.INTERROGATIVE_TYPE, InterrogativeType.WHO_INDIRECT_OBJECT);
+        clause.setFeature(Feature.TENSE, Tense.FUTURE);
         String output = realiser_nl.realiseSentence(clause);
-        collector.checkThat(output, equalTo("Aan wie denk jij soms?"));
+        collector.checkThat(output, equalTo("Aan wie zal jij Jan presenteren?"));
     }
 
     @Test
@@ -213,14 +214,20 @@ public class DutchInterrogativeTest {
     @Test
     public void basicInterrogativeHowCondition(){
         SPhraseSpec clause = factory_nl.createClause();
-        NPPhraseSpec subject = factory_nl.createNounPhrase("jouw vakantie in Parijs");
+        PPPhraseSpec preposition = factory_nl.createPrepositionPhrase();
+        preposition.setPreposition("in");
+        preposition.setObject("Parijs");
+        NPPhraseSpec subject = factory_nl.createNounPhrase();
+        subject.setNoun("vakantie");
+        subject.setSpecifier("jouw");
+        subject.addComplement(preposition);
         clause.setSubject(subject);
 
         VPPhraseSpec verb = factory_nl.createVerbPhrase();
         verb.setVerb("zijn");
         clause.setFeature(Feature.TENSE, Tense.PAST);
         clause.setVerb(verb);
-        clause.setFeature(Feature.INTERROGATIVE_TYPE, InterrogativeType.HOW_CONDITION_QUALITY);
+        clause.setFeature(Feature.INTERROGATIVE_TYPE, InterrogativeType.HOW_PREDICATE);
 
         String output = realiser_nl.realiseSentence(clause);
         collector.checkThat(output, equalTo("Hoe was jouw vakantie in Parijs?"));
@@ -261,8 +268,9 @@ public class DutchInterrogativeTest {
         pp.setPreposition("over");
         clause.addComplement(pp);
         clause.setFeature(Feature.INTERROGATIVE_TYPE, InterrogativeType.HOW_COME);
+        clause.setFeature(Feature.TENSE, Tense.FUTURE);
         String output = realiser_nl.realiseSentence(clause);
-        collector.checkThat(output, equalTo("Hoezo denk jij over Jan?"));
+        collector.checkThat(output, equalTo("Hoezo zal jij denken over Jan?"));
     }
 
 

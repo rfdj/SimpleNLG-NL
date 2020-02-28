@@ -14,7 +14,7 @@
  * The Initial Developer of the Original Code is Ehud Reiter, Albert Gatt and Dave Westwater.
  * Portions created by Ehud Reiter, Albert Gatt and Dave Westwater are Copyright (C) 2010-11 The University of Aberdeen. All Rights Reserved.
  *
- * Contributor(s): Ehud Reiter, Albert Gatt, Dave Wewstwater, Roman Kutlak, Margaret Mitchell, Pierre-Luc Vaudry.
+ * Contributor(s): Ehud Reiter, Albert Gatt, Dave Wewstwater, Roman Kutlak, Margaret Mitchell.
  */
 package simplenlg.syntax.english;
 
@@ -37,7 +37,7 @@ import simplenlg.framework.WordElement;
  * This class contains static methods to help the syntax processor realise
  * coordinated phrases.
  * </p>
- * 
+ *
  * @author D. Westwater, University of Aberdeen.
  * @version 4.0
  */
@@ -45,7 +45,7 @@ abstract class CoordinatedPhraseHelper {
 
 	/**
 	 * The main method for realising coordinated phrases.
-	 * 
+	 *
 	 * @param parent
 	 *            the <code>SyntaxProcessor</code> that called this method.
 	 * @param phrase
@@ -53,16 +53,15 @@ abstract class CoordinatedPhraseHelper {
 	 * @return the realised <code>NLGElement</code>.
 	 */
 	static NLGElement realise(SyntaxProcessor parent,
-			CoordinatedPhraseElement phrase) {
+							  CoordinatedPhraseElement phrase) {
 		ListElement realisedElement = null;
 
 		if (phrase != null) {
 			realisedElement = new ListElement();
 			PhraseHelper.realiseList(parent, realisedElement, phrase
 					.getPreModifiers(), DiscourseFunction.PRE_MODIFIER);
-			
-			// vaudrypl added argument to constructor
-			CoordinatedPhraseElement coordinated = new CoordinatedPhraseElement(phrase.getFactory());
+
+			CoordinatedPhraseElement coordinated = new CoordinatedPhraseElement();
 
 			List<NLGElement> children = phrase.getChildren();
 			String conjunction = phrase.getFeatureAsString(Feature.CONJUNCTION);
@@ -73,9 +72,9 @@ abstract class CoordinatedPhraseHelper {
 			InflectedWordElement conjunctionElement = null;
 
 			if (children != null && children.size() > 0) {
+
 				if (phrase.getFeatureAsBoolean(Feature.RAISE_SPECIFIER)
 						.booleanValue()) {
-
 					raiseSpecifier(children);
 				}
 
@@ -105,12 +104,16 @@ abstract class CoordinatedPhraseHelper {
 												.getFeature(Feature.SUPRESSED_COMPLEMENTISER));
 					}
 
-					conjunctionElement = new InflectedWordElement(conjunction,
-							LexicalCategory.CONJUNCTION);
-					conjunctionElement.setFeature(
-							InternalFeature.DISCOURSE_FUNCTION,
-							DiscourseFunction.CONJUNCTION);
-					coordinated.addCoordinate(conjunctionElement);
+					//skip conjunction if it's null or empty string
+					if (conjunction != null && conjunction.length() > 0) {
+						conjunctionElement = new InflectedWordElement(
+								conjunction, LexicalCategory.CONJUNCTION);
+						conjunctionElement.setFeature(
+								InternalFeature.DISCOURSE_FUNCTION,
+								DiscourseFunction.CONJUNCTION);
+						coordinated.addCoordinate(conjunctionElement);
+					}
+
 					coordinated.addCoordinate(parent.realise(child));
 				}
 				realisedElement.addComponent(coordinated);
@@ -126,7 +129,7 @@ abstract class CoordinatedPhraseHelper {
 
 	/**
 	 * Sets the common features from the phrase to the child element.
-	 * 
+	 *
 	 * @param phrase
 	 *            the <code>CoordinatedPhraseElement</code>
 	 * @param child
@@ -134,7 +137,7 @@ abstract class CoordinatedPhraseHelper {
 	 *            coordination.
 	 */
 	private static void setChildFeatures(CoordinatedPhraseElement phrase,
-			NLGElement child) {
+										 NLGElement child) {
 
 		if (phrase.hasFeature(Feature.PROGRESSIVE)) {
 			child.setFeature(Feature.PROGRESSIVE, phrase
@@ -156,13 +159,13 @@ abstract class CoordinatedPhraseHelper {
 			child.setFeature(Feature.NUMBER, phrase.getFeature(Feature.NUMBER));
 		}
 		if (phrase.hasFeature(Feature.TENSE)) {
-			child.setTense(phrase.getTense());
+			child.setFeature(Feature.TENSE, phrase.getFeature(Feature.TENSE));
 		}
 		if (phrase.hasFeature(Feature.PERSON)) {
 			child.setFeature(Feature.PERSON, phrase.getFeature(Feature.PERSON));
 		}
 		if (phrase.hasFeature(Feature.NEGATED)) {
-			child.setNegated(phrase.isNegated());
+			child.setFeature(Feature.NEGATED, phrase.getFeature(Feature.NEGATED));
 		}
 		if (phrase.hasFeature(Feature.MODAL)) {
 			child.setFeature(Feature.MODAL, phrase.getFeature(Feature.MODAL));
@@ -189,7 +192,7 @@ abstract class CoordinatedPhraseHelper {
 	 * example, <em>the cat and the dog</em> will be realised as
 	 * <em>the cat and dog</em> while <em>the cat and any dog</em> will remain
 	 * <em>the cat and any dog</em>.
-	 * 
+	 *
 	 * @param children
 	 *            the <code>List</code> of coordinates in the
 	 *            <code>CoordinatedPhraseElement</code>
@@ -211,7 +214,7 @@ abstract class CoordinatedPhraseHelper {
 				test = (specifier instanceof WordElement) ? ((WordElement) specifier)
 						.getBaseForm()
 						: specifier
-								.getFeatureAsString(LexicalFeature.BASE_FORM);
+						.getFeatureAsString(LexicalFeature.BASE_FORM);
 			}
 
 			if (test != null) {
@@ -229,7 +232,7 @@ abstract class CoordinatedPhraseHelper {
 						String childForm = (specifier instanceof WordElement) ? ((WordElement) specifier)
 								.getBaseForm()
 								: specifier
-										.getFeatureAsString(LexicalFeature.BASE_FORM);
+								.getFeatureAsString(LexicalFeature.BASE_FORM);
 
 						if (!test.equals(childForm)) {
 							allMatch = false;

@@ -280,6 +280,47 @@ abstract public class Feature {
 
 	/**
 	 * <p>
+	 * An appositive is a type of postmodifying phrase which is quasi-synonymous
+	 * with, or a possible replacement of, the phrase it modifies. A typical
+	 * example occurs with NPs, e.g.:
+	 * <em>his house, <b>a large villa</b>, is on the hill</em> where the phrase
+	 * <em>a large villa</em> is an appositive postmodifier of
+	 * <em>his house</em>. Note that appositives are usually realised surrounded
+	 * by commas. Accordingly, this feature is primarily used by the orthography
+	 * processor to determine whether commas should be placed around a
+	 * postmodifying phrase.
+	 * </p>
+	 * <table border="1">
+	 * <tr>
+	 * <td><b>Feature name</b></td>
+	 * <td><em>appositive</em></td>
+	 * </tr>
+	 * <tr>
+	 * <td><b>Expected type</b></td>
+	 * <td><code>boolean</code></td>
+	 * </tr>
+	 * <tr>
+	 * <td><b>Created by</b></td>
+	 * <td>The user.</td>
+	 * </tr>
+	 * <tr>
+	 * <td><b>Used by</b></td>
+	 * <td>The orthography processor to determine comma placement.</td>
+	 * </tr>
+	 * <tr>
+	 * <td><b>Applies to</b></td>
+	 * <td>Any phrase which is a postmodifier of another phrase.</td>
+	 * </tr>
+	 * <tr>
+	 * <td><b>Default</b></td>
+	 * <td><code>false</code> or <code>null</code></td>
+	 * </tr>
+	 * </table>
+	 */
+	public static final String APPOSITIVE = "appositive";
+
+	/**
+	 * <p>
 	 * This feature represents the cue phrase of a sentence. Cue phrases
 	 * sometimes appear at the start of sentences. In the following example,
 	 * <em>however</em> forms the cue phrase:<br>
@@ -647,7 +688,7 @@ abstract public class Feature {
 	 * </tr>
 	 * </table>
 	 */
-	public static final String PATTERN = "pattern";
+//	public static final String PATTERN = "pattern";
 
 	/**
 	 * <p>

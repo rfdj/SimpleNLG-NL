@@ -18,11 +18,8 @@
  */
 package simplenlg.syntax.dutch;
 
-import gov.nih.nlm.nls.lvg.Util.Str;
 import simplenlg.features.*;
 import simplenlg.features.dutch.DutchFeature;
-import simplenlg.features.french.FrenchFeature;
-import simplenlg.features.french.FrenchInternalFeature;
 import simplenlg.features.french.FrenchLexicalFeature;
 import simplenlg.framework.*;
 import simplenlg.phrasespec.*;
@@ -435,7 +432,7 @@ public class ClauseHelper extends simplenlg.syntax.english.nonstatic.ClauseHelpe
 		
 		if (!phrase.hasRelativePhrase(DiscourseFunction.SUBJECT)) {
 			if(phrase.hasFeature(Feature.INTERROGATIVE_TYPE)){
-				ListElement realisedSubject = new ListElement();
+				ListElement realisedSubject = new ListElement(phrase);
 				//Realising subject to add later
 				super.addSubjectsToFront(phrase, realisedSubject,splitVerb);
 				if(this.addSubjectAfterVerb(realisedElement,realisedSubject)){
@@ -457,12 +454,20 @@ public class ClauseHelper extends simplenlg.syntax.english.nonstatic.ClauseHelpe
 			NLGElement alreadyRealisedElement = alreadyRealisedElements.get(vpIndex);
 			if(alreadyRealisedElement.getCategory().equalTo(PhraseCategory.VERB_PHRASE)){
 				List<NLGElement> vpComponents = alreadyRealisedElement.getChildren();
+				// Look up if there is already a subject
+				// Look up the verb
+				for(int vIndex = 0; vIndex < vpComponents.size(); vIndex++){
+					NLGElement vpComponent = vpComponents.get(vIndex);
+					if(vpComponent.hasFeature(InternalFeature.DISCOURSE_FUNCTION) && vpComponent.getFeature(InternalFeature.DISCOURSE_FUNCTION).equals(DiscourseFunction.SUBJECT)){
+						realisedSubject = (ListElement) vpComponent;
+						vpComponents.remove(vIndex);
+					}
+				}
 				for(int vIndex = 0; vIndex < vpComponents.size(); vIndex++){
 					NLGElement vpComponent = vpComponents.get(vIndex);
 					if(vpComponent.getCategory().equalTo(LexicalCategory.VERB)){
 						//Add the realisedSubject directly after the first verb in the first verb phrase
 						vpComponents.add(vIndex+1,realisedSubject.getFirst());
-						//alreadyRealisedElement.
 						((ListElement) alreadyRealisedElement).setComponents(vpComponents);
 						alreadyRealisedElements.set(vpIndex,alreadyRealisedElement);
 						realisedElement.setComponents(alreadyRealisedElements);
@@ -574,40 +579,38 @@ public class ClauseHelper extends simplenlg.syntax.english.nonstatic.ClauseHelpe
 					break;
 
 				case HOW:
-					realiseInterrogativeKeyWord("hoe", realisedElement, //$NON-NLS-1$
+				case HOW_PREDICATE:
+					realiseInterrogativeKeyWord("hoe", LexicalCategory.PRONOUN, realisedElement, //$NON-NLS-1$
 							phraseFactory);
 					break;
 
 				case WHY:
-					realiseInterrogativeKeyWord("waarom", realisedElement, //$NON-NLS-1$
+					realiseInterrogativeKeyWord("waarom", LexicalCategory.PRONOUN, realisedElement, //$NON-NLS-1$
 							phraseFactory);
 					break;
 
 				case WHERE:
-					realiseInterrogativeKeyWord("waar", realisedElement, //$NON-NLS-1$
+					realiseInterrogativeKeyWord("waar", LexicalCategory.PRONOUN, realisedElement, //$NON-NLS-1$
 							phraseFactory);
 					break;
 
 				case HOW_MANY:
-					realiseInterrogativeKeyWord("hoeveel", realisedElement, //$NON-NLS-1$
+					realiseInterrogativeKeyWord("hoeveel", LexicalCategory.PRONOUN, realisedElement, //$NON-NLS-1$
 							phraseFactory);
 					break;
-
 				case WHO_SUBJECT:
-					realiseInterrogativeKeyWord("wie", realisedElement, //$NON-NLS-1$
+					realiseInterrogativeKeyWord("wie", LexicalCategory.PRONOUN, realisedElement, //$NON-NLS-1$
 							phraseFactory);
 					break;
 
 				case WHO_OBJECT:
-					realiseInterrogativeKeyWord("wie", realisedElement, //$NON-NLS-1$
+					realiseInterrogativeKeyWord("wie", LexicalCategory.PRONOUN, realisedElement, //$NON-NLS-1$
 							phraseFactory);
 					break;
-
 				case WHO_INDIRECT_OBJECT:
 					SPhraseSpec s = ((SPhraseSpec) phrase);
 					Object indirectObject = s.getIndirectObject();
 					NLGElement preposition = null;
-
 					if (indirectObject instanceof PPPhraseSpec) {
 						preposition = ((PPPhraseSpec) indirectObject).getPreposition();
 					}
@@ -616,12 +619,12 @@ public class ClauseHelper extends simplenlg.syntax.english.nonstatic.ClauseHelpe
 					}
 					realiseInterrogativePreposition(preposition, realisedElement, //$NON-NLS-1$
 							phraseFactory);
-					realiseInterrogativeKeyWord("wie", realisedElement, //$NON-NLS-1$
+					realiseInterrogativeKeyWord("wie", LexicalCategory.PRONOUN, realisedElement, //$NON-NLS-1$
 							phraseFactory);
 					break;
-
 				case WHAT_OBJECT:
-					realiseInterrogativeKeyWord("wat", realisedElement, //$NON-NLS-1$
+				case WHAT_SUBJECT:
+					realiseInterrogativeKeyWord("wat", LexicalCategory.PRONOUN, realisedElement, //$NON-NLS-1$
 							phraseFactory);
 					break;
 //				Complex case where the preposition has to go at the back of the sentence, use WHY or HOW_COME
@@ -632,29 +635,25 @@ public class ClauseHelper extends simplenlg.syntax.english.nonstatic.ClauseHelpe
 //					realiseInterrogativePreposition(voor,realisedElement,phraseFactory);
 //					break;
 				case WHEN:
-					realiseInterrogativeKeyWord("wanneer", realisedElement, //$NON-NLS-1$
+					realiseInterrogativeKeyWord("wanneer", LexicalCategory.PRONOUN, realisedElement, //$NON-NLS-1$
 							phraseFactory);
 					break;
 				case WHICH:
-					realiseInterrogativeKeyWord("welke", realisedElement, //$NON-NLS-1$
+					realiseInterrogativeKeyWord("welke", LexicalCategory.PRONOUN, realisedElement, //$NON-NLS-1$
 							phraseFactory);
 					break;
 				case WHOSE:
-					realiseInterrogativeKeyWord("van", realisedElement, //$NON-NLS-1$
+					realiseInterrogativeKeyWord("van", LexicalCategory.PRONOUN, realisedElement, //$NON-NLS-1$
 							phraseFactory);
-					realiseInterrogativeKeyWord("wie", realisedElement, //$NON-NLS-1$
-							phraseFactory);
-					break;
-				case HOW_CONDITION_QUALITY:
-					realiseInterrogativeKeyWord("hoe", realisedElement, //$NON-NLS-1$
+					realiseInterrogativeKeyWord("wie", LexicalCategory.PRONOUN, realisedElement, //$NON-NLS-1$
 							phraseFactory);
 					break;
 				case HOW_ADJECTIVE:
-					realiseInterrogativeKeyWord("hoe", realisedElement, //$NON-NLS-1$
+					realiseInterrogativeKeyWord("hoe", LexicalCategory.PRONOUN, realisedElement, //$NON-NLS-1$
 							phraseFactory);
 					break;
 				case HOW_COME:
-					realiseInterrogativeKeyWord("hoezo", realisedElement, //$NON-NLS-1$
+					realiseInterrogativeKeyWord("hoezo", LexicalCategory.PRONOUN, realisedElement, //$NON-NLS-1$
 							phraseFactory);
 					break;
 				default:
@@ -708,6 +707,7 @@ public class ClauseHelper extends simplenlg.syntax.english.nonstatic.ClauseHelpe
 		ListElement realisedElement = null;
 		NLGFactory phraseFactory = phrase.getFactory();
 		NLGElement splitVerb = null;
+		boolean interrogObj = false;
 
 		if (phrase != null) {
 			// vaudrypl added phrase argument to ListElement constructor
@@ -729,6 +729,7 @@ public class ClauseHelper extends simplenlg.syntax.english.nonstatic.ClauseHelpe
 			addComplementiser(phrase, realisedElement);
 			addCuePhrase(phrase, realisedElement);
 			if (phrase.hasFeature(Feature.INTERROGATIVE_TYPE)) {
+				interrogObj = true;
 				addInterrogativeSpecifier(phrase, realisedElement);
 
 				if(interrogativeType.equals(InterrogativeType.WHO_SUBJECT)){
@@ -753,12 +754,13 @@ public class ClauseHelper extends simplenlg.syntax.english.nonstatic.ClauseHelpe
 				splitVerb = passiveSplitVerb;
 
 			if (((SPhraseSpec) phrase).getVerb() != null){
-				realiseVerb(phrase, realisedElement, splitVerb, verbElement);
-				//For these types of interrogatives, search for the object, remove it and put it in second position.
+				realiseVerb(phrase, realisedElement, splitVerb, verbElement, interrogObj);
+				//For these types of interrogatives, search for the object, remove it at current position and put it in second position.
 				if(interrogativeType instanceof InterrogativeType
 					&& (interrogativeType.equals(InterrogativeType.HOW_ADJECTIVE)
 					|| interrogativeType.equals(InterrogativeType.WHICH)
-					|| interrogativeType.equals(InterrogativeType.HOW_MANY))){
+					|| interrogativeType.equals(InterrogativeType.HOW_MANY)
+					|| interrogativeType.equals(InterrogativeType.WHOSE))){
 					addObjectBeforeVerb(realisedElement);
 				}
 
@@ -766,7 +768,6 @@ public class ClauseHelper extends simplenlg.syntax.english.nonstatic.ClauseHelpe
 
 			//In these types of interrogatives, the subject is after the verb
 			if (interrogativeType instanceof InterrogativeType
-					&& interrogativeType != InterrogativeType.WHO_INDIRECT_OBJECT
 					&& interrogativeType != InterrogativeType.WHY
 					&& interrogativeType != InterrogativeType.WHERE
 					&& interrogativeType != InterrogativeType.WHO_SUBJECT
@@ -783,7 +784,7 @@ public class ClauseHelper extends simplenlg.syntax.english.nonstatic.ClauseHelpe
 	 * in interrogative HOW_ADJECTIVE
 	 * @param realisedElement
 	 */
-	private void addObjectBeforeVerb(ListElement realisedElement) {
+	protected void addObjectBeforeVerb(ListElement realisedElement) {
 		List<NLGElement> alreadyRealisedElements = realisedElement.getChildren();
 		for(int vpIndex = 0; vpIndex < alreadyRealisedElements.size(); vpIndex++){
 			NLGElement alreadyRealisedElement = alreadyRealisedElements.get(vpIndex);

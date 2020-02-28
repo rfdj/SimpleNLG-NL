@@ -52,6 +52,9 @@ public enum DocumentCategory implements ElementCategory {
 	/** Definition for creating a list of items. */
 	LIST,
 
+	/** Definition for creating a list of enumerated items. */
+	ENUMERATED_LIST,
+
 	/** Definition for an item in a list. */
 	LIST_ITEM;
 

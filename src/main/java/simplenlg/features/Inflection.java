@@ -41,7 +41,7 @@ package simplenlg.features;
  * 
  */
 
-public enum Pattern {
+public enum Inflection {
 
 	/**
 	 * The morphology processor has simple rules for pluralising Greek and Latin

@@ -18,11 +18,8 @@
  */
 package simplenlg.syntax.english.nonstatic;
 
-import simplenlg.features.Feature;
-import simplenlg.features.InternalFeature;
-import simplenlg.features.InterrogativeType;
-import simplenlg.features.LexicalFeature;
-import simplenlg.features.Tense;
+import gov.nih.nlm.nls.lvg.Util.In;
+import simplenlg.features.*;
 import simplenlg.framework.InflectedWordElement;
 import simplenlg.framework.LexicalCategory;
 import simplenlg.framework.ListElement;
@@ -34,6 +31,7 @@ import simplenlg.phrasespec.AdvPhraseSpec;
 import simplenlg.phrasespec.SPhraseSpec;
 import simplenlg.phrasespec.VPPhraseSpec;
 import simplenlg.syntax.AbstractClauseHelper;
+import simplenlg.syntax.english.SyntaxProcessor;
 
 /**
  * <p>
@@ -117,58 +115,101 @@ public class ClauseHelper extends AbstractClauseHelper {
 		if (type instanceof InterrogativeType) {
 			switch ((InterrogativeType) type) {
 			case YES_NO:
-				splitVerb = realiseYesNo(phrase, verbElement,
-						phraseFactory, realisedElement);
+				splitVerb = realiseYesNo(phrase, verbElement, phraseFactory, realisedElement);
 				break;
-
 			case WHO_SUBJECT:
-				realiseInterrogativeKeyWord("who", realisedElement, //$NON-NLS-1$
-						phraseFactory);
+			case HOW_PREDICATE:
+			case WHAT_SUBJECT:
+				realiseInterrogativeKeyWord(((InterrogativeType) type).getString(), LexicalCategory.PRONOUN, realisedElement, //$NON-NLS-1$
+					phraseFactory);
 				// Commented out by vaudrypl to keep phrase intact.
 				// Modified addSubjectsToFront() accordingly.
-				// phrase.removeFeature(InternalFeature.SUBJECTS);
+				 phrase.removeFeature(InternalFeature.SUBJECTS);
+				break;
+			case HOW_MANY:
+			case WHICH:
+				realiseInterrogativeKeyWord("how", LexicalCategory.PRONOUN, realisedElement, //$NON-NLS-1$
+						phraseFactory);
+				realiseInterrogativeKeyWord("many", LexicalCategory.ADVERB, realisedElement, //$NON-NLS-1$
+						phraseFactory);
+				addDoAuxiliary(phrase, phraseFactory, realisedElement);
 				break;
 			case HOW:
 			case WHY:
 			case WHEN:
 			case WHERE:
-				realiseInterrogativeKeyWord(type.toString().toLowerCase(),
-						realisedElement, //$NON-NLS-1$
-						phraseFactory);
-				splitVerb = realiseYesNo(phrase, verbElement,
-						phraseFactory, realisedElement);
-				break;
-			case HOW_COME:
-				realiseInterrogativeKeyWord("how", realisedElement, //$NON-NLS-1$
-						phraseFactory);
-				realiseInterrogativeKeyWord("come", realisedElement, //$NON-NLS-1$
-						phraseFactory);
-				break;
-
-			case HOW_MANY:
-				realiseInterrogativeKeyWord("how", realisedElement, //$NON-NLS-1$
-						phraseFactory);
-				realiseInterrogativeKeyWord("many", realisedElement, //$NON-NLS-1$
-						phraseFactory);
-				break;
-
 			case WHO_OBJECT:
 			case WHO_INDIRECT_OBJECT:
-				realiseInterrogativeKeyWord("whom", realisedElement, //$NON-NLS-1$
+			case WHAT_OBJECT:
+				splitVerb = realiseObjectWHInterrogative(((InterrogativeType) type).getString(),
+						phrase,
+						realisedElement,
+						phraseFactory);
+				break;
+//			case HOW_PREDICATE:
+//				splitVerb = realiseObjectWHInterrogative("how", phrase, realisedElement, phraseFactory);
+//				break;
+			case HOW_ADJECTIVE:
+			case WHOSE:
+				realiseInterrogativeKeyWord(((InterrogativeType) type).getString(), LexicalCategory.PRONOUN, realisedElement, //$NON-NLS-1$
 						phraseFactory);
 				addDoAuxiliary(phrase, phraseFactory, realisedElement);
 				break;
-
-			case WHAT_OBJECT:
-				splitVerb = realiseWhatInterrogative(phrase,
-						realisedElement, phraseFactory);
+			case HOW_COME:
+				realiseInterrogativeKeyWord("how", LexicalCategory.PRONOUN, realisedElement, //$NON-NLS-1$
+						phraseFactory);
+				realiseInterrogativeKeyWord("come", LexicalCategory.PRONOUN, realisedElement, //$NON-NLS-1$
+						phraseFactory);
 				break;
-
 			default:
 				break;
 			}
 		}
 		return splitVerb;
+	}
+
+	/**
+	 * Controls the realisation of <em>wh</em> object questions.
+	 *
+	 * @param keyword
+	 *            the wh word
+	 * @param phrase
+	 *            the <code>PhraseElement</code> representing this clause.
+	 * @param realisedElement
+	 *            the current realisation of the clause.
+	 * @param phraseFactory
+	 *            the phrase factory to be used.
+	 * @return an <code>NLGElement</code> representing a subject that should
+	 *         split the verb
+	 */
+	private NLGElement realiseObjectWHInterrogative(String keyword, PhraseElement phrase, ListElement realisedElement, NLGFactory phraseFactory) {
+		NLGElement splitVerb = null;
+		realiseInterrogativeKeyWord(keyword, LexicalCategory.PRONOUN, realisedElement, //$NON-NLS-1$
+				phraseFactory);
+
+		// if (!Tense.FUTURE.equals(phrase.getFeature(Feature.TENSE)) &&
+		// !copular) {
+		if(phrase.hasFeature(Feature.INTERROGATIVE_TYPE) && phrase.getFeature(Feature.INTERROGATIVE_TYPE).equals(InterrogativeType.HOW_PREDICATE)){
+			splitVerb = realiseSubjects(phrase);
+		}
+		else if(!hasAuxiliary(phrase) && !phrase.getVerbPhraseHelper().isCopular(phrase)) {
+			addDoAuxiliary(phrase, phraseFactory, realisedElement);
+
+		} else if(!phrase.getFeatureAsBoolean(Feature.PASSIVE).booleanValue()) {
+			splitVerb = realiseSubjects(phrase);
+		}
+
+		return splitVerb;
+	}
+
+	/*
+	 * Check if a sentence has an auxiliary (needed to relise questions
+	 * correctly)
+	 */
+	private boolean hasAuxiliary(PhraseElement phrase) {
+		return phrase.hasFeature(Feature.MODAL) || phrase.getFeatureAsBoolean(Feature.PERFECT).booleanValue()
+				|| phrase.getFeatureAsBoolean(Feature.PROGRESSIVE).booleanValue()
+				|| Tense.FUTURE.equals(phrase.getFeature(Feature.TENSE));
 	}
 
 	/**
@@ -180,8 +221,6 @@ public class ClauseHelper extends AbstractClauseHelper {
 	 *            the current realisation of the clause.
 	 * @param phraseFactory
 	 *            the phrase factory to be used.
-	 * @param subjects
-	 *            the <code>List</code> of subjects in the clause.
 	 * @return an <code>NLGElement</code> representing a subject that should
 	 *         split the verb
 	 */
@@ -189,9 +228,9 @@ public class ClauseHelper extends AbstractClauseHelper {
 			ListElement realisedElement, NLGFactory phraseFactory) {
 		NLGElement splitVerb = null;
 
-		realiseInterrogativeKeyWord("what", realisedElement, //$NON-NLS-1$
+		realiseInterrogativeKeyWord("what", LexicalCategory.PRONOUN, realisedElement, //$NON-NLS-1$
 				phraseFactory);
-		if (!Tense.FUTURE.equals(phrase.getTense())) {
+		if (!Tense.FUTURE.equals(phrase.getFeature(Feature.TENSE))) {
 			addDoAuxiliary(phrase, phraseFactory, realisedElement);
 		} else {
 			if (!phrase.getFeatureAsBoolean(Feature.PASSIVE).booleanValue()) {
@@ -215,7 +254,7 @@ public class ClauseHelper extends AbstractClauseHelper {
 			ListElement realisedElement) {
 
 		PhraseElement doPhrase = phraseFactory.createVerbPhrase("do"); //$NON-NLS-1$
-		doPhrase.setTense(phrase.getTense());
+		doPhrase.setFeature(Feature.TENSE,phrase.getFeature(Feature.TENSE));
 		doPhrase.setFeature(Feature.PERSON, phrase.getFeature(Feature.PERSON));
 		doPhrase.setFeature(Feature.NUMBER, phrase.getFeature(Feature.NUMBER));
 		realisedElement.addComponent(doPhrase.realiseSyntax());
@@ -224,16 +263,15 @@ public class ClauseHelper extends AbstractClauseHelper {
 	/**
 	 * Realises the key word of the interrogative. For example, <em>who</em>,
 	 * <em>what</em>
-	 * 
-	 * @param keyWord
+	 *  @param keyWord
 	 *            the key word of the interrogative.
+	 * @param pronoun
 	 * @param realisedElement
 	 *            the current realisation of the clause.
 	 * @param phraseFactory
-	 *            the phrase factory to be used.
 	 */
 	protected void realiseInterrogativeKeyWord(String keyWord,
-			ListElement realisedElement, NLGFactory phraseFactory) {
+											   LexicalCategory pronoun, ListElement realisedElement, NLGFactory phraseFactory) {
 
 		if (keyWord != null) {
 			NLGElement question = phraseFactory.createWord(keyWord,
@@ -266,8 +304,6 @@ public class ClauseHelper extends AbstractClauseHelper {
 	 * @param verbElement
 	 *            the <code>NLGElement</code> representing the verb phrase for
 	 *            this clause.
-	 * @param subjects
-	 *            the <code>List</code> of subjects in the clause.
 	 * @return an <code>NLGElement</code> representing a subject that should
 	 *         split the verb
 	 */
@@ -282,8 +318,8 @@ public class ClauseHelper extends AbstractClauseHelper {
 				&& !phrase.getFeatureAsBoolean(Feature.PROGRESSIVE)
 						.booleanValue()
 				&& !phrase.hasFeature(Feature.MODAL)
-				&& !Tense.FUTURE.equals(phrase.getTense())
-				&& !phrase.isNegated()
+				&& !Tense.FUTURE.equals(phrase.getFeature(Feature.TENSE))
+				&& !phrase.getFeatureAsBoolean(Feature.NEGATED)
 				&& !phrase.getFeatureAsBoolean(Feature.PASSIVE).booleanValue()) {
 			addDoAuxiliary(phrase, phraseFactory, realisedElement);
 		} else {

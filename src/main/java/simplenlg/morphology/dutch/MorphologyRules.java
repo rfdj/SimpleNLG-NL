@@ -118,10 +118,10 @@ public class MorphologyRules extends simplenlg.morphology.english.NonStaticMorph
 			InflectedWordElement element, WordElement baseWord) {
 
 		String realised = null;
-        Object patternValue = element.getFeature(Feature.PATTERN);
-        if (patternValue != Pattern.REGULAR_DOUBLE) {
+        Object patternValue = element.getFeature(LexicalFeature.DEFAULT_INFL);
+        if (patternValue != Inflection.REGULAR_DOUBLE) {
             checkIfRegularDouble(element, baseWord);
-            patternValue = element.getFeature(Feature.PATTERN);
+            patternValue = element.getFeature(LexicalFeature.DEFAULT_INFL);
         }
 
 
@@ -139,7 +139,7 @@ public class MorphologyRules extends simplenlg.morphology.english.NonStaticMorph
                 realised = baseWord.getFeatureAsString(LexicalFeature.COMPARATIVE);
             }
             if (realised == null) {
-                if (Pattern.REGULAR_DOUBLE.equals(patternValue)) {
+                if (Inflection.REGULAR_DOUBLE.equals(patternValue)) {
                     realised = buildDoubleCompAdjective(baseForm);
                 } else {
                     realised = buildRegularComparative(baseForm);
@@ -188,7 +188,7 @@ public class MorphologyRules extends simplenlg.morphology.english.NonStaticMorph
 
         if (realised == null) {
 
-            if (Pattern.REGULAR_DOUBLE.equals(patternValue)) {
+            if (Inflection.REGULAR_DOUBLE.equals(patternValue)) {
                 realised =  baseForm + baseForm.charAt(baseForm.length() - 1);
             } else if (baseForm.matches(regexCVVC)
 					&& (parent.isPlural()
@@ -231,7 +231,7 @@ public class MorphologyRules extends simplenlg.morphology.english.NonStaticMorph
             realised += "e";
 		} else {
         	// Roll back repeated consonant
-			if (Pattern.REGULAR_DOUBLE.equals(patternValue)) {
+			if (Inflection.REGULAR_DOUBLE.equals(patternValue)) {
 				realised = baseForm;
 			}
 
@@ -258,7 +258,7 @@ public class MorphologyRules extends simplenlg.morphology.english.NonStaticMorph
      *            the <code>WordElement</code>.
      */
     protected void checkIfRegularDouble(InflectedWordElement element, WordElement baseWord) {
-        if (element.getFeature(Feature.PATTERN) == null) {
+        if (element.getFeature(LexicalFeature.DEFAULT_INFL) == null) {
             String baseForm = baseWord.getBaseForm();
             String regexCVC = ".*[b-df-hj-np-tv-xzB-DF-HJ-NP-TV-XZ]" // anything, followed by a consonant
                     + "[aeiouyAEIOUY]" // a vowel
@@ -267,7 +267,7 @@ public class MorphologyRules extends simplenlg.morphology.english.NonStaticMorph
             if (baseForm.matches(regexCVC)
 					&& !baseForm.endsWith("ig")
 					&& !baseForm.endsWith("ijk")) {
-                element.setFeature(Feature.PATTERN, Pattern.REGULAR_DOUBLE);
+                element.setFeature(LexicalFeature.DEFAULT_INFL, Inflection.REGULAR_DOUBLE);
             }
 
         }

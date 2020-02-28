@@ -41,6 +41,11 @@ public enum InterrogativeType {
 	HOW,
 
 	/**
+	 * A how question related to a predicative sentence, such as <i>John is fine</i>, which becomes <i>How is John?</i>
+	 */
+	HOW_PREDICATE,
+
+	/**
 	 * This type of interrogative is a question pertaining to the object of a
 	 * phrase. For example, <em>John bought a horse</em> becomes <em>what did 
 	 * John buy?</em> while <em>John gave Mary a flower</em> becomes
@@ -80,6 +85,8 @@ public enum InterrogativeType {
 	 * <em>John gave Mary a flower</em> becomes <em>Who gave Mary a flower?</em>
 	 */
 	WHO_SUBJECT,
+
+	WHAT_SUBJECT,
 
 	/**
 	 * The type of interrogative relating to the reason for an event happening.
@@ -127,11 +134,6 @@ public enum InterrogativeType {
 	WHOSE,
 
 	/**
-	 * Asking about a manner. Example: <em>My fieldtrip was awesome</em> becomes <em>How was your fieldtrip?</em>
-	 */
-	HOW_CONDITION_QUALITY,
-
-	/**
 	 * Asking about the extent or degree, you could take any ADJECTIVE as an argument. Example: <em>the car is beautiful</em> becomes
 	 * <em>How beautiful is the car?</em>
 	 */
@@ -168,5 +170,62 @@ public enum InterrogativeType {
 	 */
 	public static boolean isIndirectObject(Object type) {
 		return WHO_INDIRECT_OBJECT.equals(type);
+	}
+
+	/**
+	 * Convenience method to return the String corresponding to the question
+	 * word. Useful, since the types in this enum aren't all simply convertible
+	 * to strings (e.g. <code>WHO_SUBJCT</code> and <code>WHO_OBJECT</code> both
+	 * correspond to String <i>Who</i>)
+	 *
+	 * @return the string corresponding to the question word
+	 */
+	public String getString() {
+		String s = "";
+
+		switch (this) {
+			case HOW_COME:
+				s = "how come";
+				break;
+			case HOW:
+			case HOW_PREDICATE:
+			case HOW_ADJECTIVE:
+				s = "how";
+				break;
+			case WHAT_OBJECT:
+			case WHAT_SUBJECT:
+				s = "what";
+				break;
+			case WHERE:
+				s = "where";
+				break;
+			case WHO_INDIRECT_OBJECT:
+			case WHO_OBJECT:
+				s = "whom";
+				break;
+			case WHO_SUBJECT:
+				s = "who";
+				break;
+			case WHY:
+				s = "why";
+				break;
+			case HOW_MANY:
+				s = "how many";
+				break;
+			case YES_NO:
+				s = "yes/no";
+				break;
+			case WHICH:
+				s = "which";
+				break;
+			case WHOSE:
+				s = "whose";
+				break;
+			case WHEN:
+				s = "when";
+				break;
+		}
+
+		return s;
 	}
 }

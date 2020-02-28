@@ -14,7 +14,7 @@
  * The Initial Developer of the Original Code is Ehud Reiter, Albert Gatt and Dave Westwater.
  * Portions created by Ehud Reiter, Albert Gatt and Dave Westwater are Copyright (C) 2010-11 The University of Aberdeen. All Rights Reserved.
  *
- * Contributor(s): Ehud Reiter, Albert Gatt, Dave Wewstwater, Roman Kutlak, Margaret Mitchell, Pierre-Luc Vaudry.
+ * Contributor(s): Ehud Reiter, Albert Gatt, Dave Wewstwater, Roman Kutlak, Margaret Mitchell.
  */
 package simplenlg.syntax.english;
 
@@ -39,7 +39,7 @@ import simplenlg.framework.WordElement;
  * This is the processor for handling syntax within the SimpleNLG. The processor
  * translates phrases into lists of words.
  * </p>
- * 
+ *
  * <p>
  * All processing modules perform realisation on a tree of
  * <code>NLGElement</code>s. The modules can alter the tree in whichever way
@@ -47,13 +47,13 @@ import simplenlg.framework.WordElement;
  * list elements consisting of inflected words while the morphology processor
  * replaces inflected words with string elements.
  * </p>
- * 
+ *
  * <p>
  * <b>N.B.</b> the use of <em>module</em>, <em>processing module</em> and
  * <em>processor</em> is interchangeable. They all mean an instance of this
  * class.
  * </p>
- * 
+ *
  * @author D. Westwater, University of Aberdeen.
  * @version 4.0
  */
@@ -112,13 +112,15 @@ public class SyntaxProcessor extends NLGModule {
 			} else if (element instanceof WordElement) {
 				// AG: need to check if it's a word element, in which case it
 				// needs to be marked for inflection
-				InflectedWordElement infl = new InflectedWordElement((WordElement) element);
-				
-				//the inflected word inherits all features from the base word
-				for(String feature: element.getAllFeatureNames()) {
+				InflectedWordElement infl = new InflectedWordElement(
+						(WordElement) element);
+
+				// // the inflected word inherits all features from the base
+				// word
+				for (String feature : element.getAllFeatureNames()) {
 					infl.setFeature(feature, element.getFeature(feature));
 				}
-				
+
 				realisedElement = realise(infl);
 
 			} else if (element instanceof CoordinatedPhraseElement) {
@@ -136,6 +138,7 @@ public class SyntaxProcessor extends NLGModule {
 				realisedElement = ((ListElement) realisedElement).getFirst();
 			}
 		}
+
 		return realisedElement;
 	}
 
@@ -165,7 +168,7 @@ public class SyntaxProcessor extends NLGModule {
 
 	/**
 	 * Realises a phrase element.
-	 * 
+	 *
 	 * @param phrase
 	 *            the element to be realised
 	 * @return the realised element.
@@ -179,30 +182,31 @@ public class SyntaxProcessor extends NLGModule {
 			if (category instanceof PhraseCategory) {
 				switch ((PhraseCategory) category) {
 
-				case CLAUSE:
-					realisedElement = ClauseHelper.realise(this, phrase);
-					break;
+					case CLAUSE:
+						realisedElement = ClauseHelper.realise(this, phrase);
+						break;
 
-				case NOUN_PHRASE:
-					realisedElement = NounPhraseHelper.realise(this, phrase);
-					break;
+					case NOUN_PHRASE:
+						realisedElement = NounPhraseHelper.realise(this, phrase);
+						break;
 
-				case VERB_PHRASE:
-					realisedElement = VerbPhraseHelper.realise(this, phrase);
-					break;
+					case VERB_PHRASE:
+						realisedElement = VerbPhraseHelper.realise(this, phrase);
+						break;
 
-				case PREPOSITIONAL_PHRASE:
-				case ADJECTIVE_PHRASE:
-				case ADVERB_PHRASE:
-					realisedElement = PhraseHelper.realise(this, phrase);
-					break;
+					case PREPOSITIONAL_PHRASE:
+					case ADJECTIVE_PHRASE:
+					case ADVERB_PHRASE:
+						realisedElement = PhraseHelper.realise(this, phrase);
+						break;
 
-				default:
-					realisedElement = phrase;
-					break;
+					default:
+						realisedElement = phrase;
+						break;
 				}
 			}
 		}
+
 		return realisedElement;
 	}
 }

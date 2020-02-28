@@ -25,12 +25,11 @@ import simplenlg.features.Gender;
 import simplenlg.features.InternalFeature;
 import simplenlg.features.LexicalFeature;
 import simplenlg.features.NumberAgreement;
-import simplenlg.features.Pattern;
+import simplenlg.features.Inflection;
 import simplenlg.features.Person;
 import simplenlg.features.Tense;
 import simplenlg.framework.*;
 import simplenlg.morphology.MorphologyRulesInterface;
-import simplenlg.phrasespec.SPhraseSpec;
 
 /**
  * This is a dynamic version of the abstract class MorphologyRules, with
@@ -111,8 +110,8 @@ public class NonStaticMorphologyRules implements MorphologyRulesInterface {
 			}
 			
 			if (pluralForm == null) {
-				Object pattern = element.getFeature(Feature.PATTERN);
-				if (Pattern.GRECO_LATIN_REGULAR.equals(pattern)) {
+				Object pattern = element.getFeature(LexicalFeature.DEFAULT_INFL);
+				if (Inflection.GRECO_LATIN_REGULAR.equals(pattern)) {
 					pluralForm = buildGrecoLatinPluralNoun(baseForm);
 				} else {
 					pluralForm = buildRegularPluralNoun(baseForm);
@@ -235,14 +234,14 @@ public class NonStaticMorphologyRules implements MorphologyRulesInterface {
 		String realised = null;
 		Object numberValue = element.getFeature(Feature.NUMBER);
 		Object personValue = element.getFeature(Feature.PERSON);
-		Tense tenseValue = element.getTense();
+		Tense tenseValue = (Tense) element.getFeature(Feature.TENSE);
 		Object formValue = element.getFeature(Feature.FORM);
-		Object patternValue = element.getFeature(Feature.PATTERN);
+		Object patternValue = element.getFeature(LexicalFeature.DEFAULT_INFL);
 
 		// base form from baseWord if it exists, otherwise from element
 		String baseForm = getBaseForm(element, baseWord);
 
-		if (element.isNegated() || Form.BARE_INFINITIVE.equals(formValue)) {
+		if (element.getFeatureAsBoolean(Feature.NEGATED) || Form.BARE_INFINITIVE.equals(formValue)) {
 			realised = baseForm;
 		} else if (Form.PRESENT_PARTICIPLE.equals(formValue)) {
 			realised = element
@@ -253,7 +252,7 @@ public class NonStaticMorphologyRules implements MorphologyRulesInterface {
 						.getFeatureAsString(LexicalFeature.PRESENT_PARTICIPLE);
 			}
 			if (realised == null) {
-				if (Pattern.REGULAR_DOUBLE.equals(patternValue)) {
+				if (Inflection.REGULAR_DOUBLE.equals(patternValue)) {
 					realised = buildDoublePresPartVerb(baseForm);
 				} else {
 					realised = buildRegularPresPartVerb(baseForm);
@@ -272,7 +271,7 @@ public class NonStaticMorphologyRules implements MorphologyRulesInterface {
 				if (realised == null) {
 					if ("be".equalsIgnoreCase(baseForm)) { //$NON-NLS-1$
 						realised = "been"; //$NON-NLS-1$
-					} else if (Pattern.REGULAR_DOUBLE.equals(patternValue)) {
+					} else if (Inflection.REGULAR_DOUBLE.equals(patternValue)) {
 						realised = buildDoublePastVerb(baseForm);
 					} else {
 						realised = buildRegularPastVerb(baseForm, numberValue);
@@ -285,7 +284,7 @@ public class NonStaticMorphologyRules implements MorphologyRulesInterface {
 					realised = baseWord.getFeatureAsString(LexicalFeature.PAST);
 				}
 				if (realised == null) {
-					if (Pattern.REGULAR_DOUBLE.equals(patternValue)) {
+					if (Inflection.REGULAR_DOUBLE.equals(patternValue)) {
 						realised = buildDoublePastVerb(baseForm);
 					} else {
 						realised = buildRegularPastVerb(baseForm, numberValue);
@@ -543,7 +542,7 @@ public class NonStaticMorphologyRules implements MorphologyRulesInterface {
 			InflectedWordElement element, WordElement baseWord) {
 
 		String realised = null;
-		Object patternValue = element.getFeature(Feature.PATTERN);
+		Object patternValue = element.getFeature(LexicalFeature.DEFAULT_INFL);
 
 		// base form from baseWord if it exists, otherwise from element
 		String baseForm = getBaseForm(element, baseWord);
@@ -556,7 +555,7 @@ public class NonStaticMorphologyRules implements MorphologyRulesInterface {
 						.getFeatureAsString(LexicalFeature.COMPARATIVE);
 			}
 			if (realised == null) {
-				if (Pattern.REGULAR_DOUBLE.equals(patternValue)) {
+				if (Inflection.REGULAR_DOUBLE.equals(patternValue)) {
 					realised = buildDoubleCompAdjective(baseForm);
 				} else {
 					realised = buildRegularComparative(baseForm);
@@ -572,7 +571,7 @@ public class NonStaticMorphologyRules implements MorphologyRulesInterface {
 						.getFeatureAsString(LexicalFeature.SUPERLATIVE);
 			}
 			if (realised == null) {
-				if (Pattern.REGULAR_DOUBLE.equals(patternValue)) {
+				if (Inflection.REGULAR_DOUBLE.equals(patternValue)) {
 					realised = buildDoubleSuperAdjective(baseForm);
 				} else {
 					realised = buildRegularSuperlative(baseForm);

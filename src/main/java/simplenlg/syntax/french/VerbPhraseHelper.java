@@ -198,7 +198,7 @@ public class VerbPhraseHelper extends simplenlg.syntax.english.nonstatic.VerbPhr
 
 		String actualModal = null;
 		Object formValue = phrase.getFeature(Feature.FORM);
-		Tense tenseValue = phrase.getTense();
+		Tense tenseValue = (Tense) phrase.getFeature(Feature.TENSE);
 		String modal = phrase.getFeatureAsString(Feature.MODAL);
 		boolean modalPast = false;
 		Stack<NLGElement> vgComponents = new Stack<NLGElement>();

@@ -231,6 +231,58 @@ public class NLGFactory {
 	}
 
 	/**
+	 * Create an inflected word element. InflectedWordElement represents a word
+	 * that already specifies the morphological and other features that it
+	 * should exhibit in a realisation. While normally, phrases are constructed
+	 * using <code>WordElement</code>s, and features are set on phrases, it is
+	 * sometimes desirable to set features directly on words (for example, when
+	 * one wants to elide a specific word, but not its parent phrase).
+	 *
+	 * <P>
+	 * If the object passed is already a <code>WordElement</code>, then a new
+	 *
+	 * <code>InflectedWordElement<code> is returned which wraps this <code>WordElement</code>
+	 * . If the object is a <code>String</code>, then the
+	 * <code>WordElement</code> representing this <code>String</code> is looked
+	 * up, and a new
+	 * <code>InflectedWordElement<code> wrapping this is returned. If no such <code>WordElement</code>
+	 * is found, the element returned is an <code>InflectedWordElement</code>
+	 * with the supplied string as baseform and no base <code>WordElement</code>
+	 * . If an <code>NLGElement</code> is passed, this is returned unchanged.
+	 *
+	 * @param word
+	 *            the word
+	 * @param category
+	 *            the category
+	 * @return an <code>InflectedWordElement</code>, or the original supplied
+	 *         object if it is an <code>NLGElement</code>.
+	 */
+	public NLGElement createInflectedWord(Object word, LexicalCategory category) {
+		// first get the word element
+		NLGElement inflElement = null;
+
+		if(word instanceof WordElement) {
+			inflElement = new InflectedWordElement((WordElement) word);
+
+		} else if(word instanceof String) {
+			NLGElement baseword = createWord((String) word, category);
+
+			if(baseword != null && baseword instanceof WordElement) {
+				inflElement = new InflectedWordElement((WordElement) baseword);
+			} else {
+				inflElement = new InflectedWordElement((String) word, category);
+			}
+
+		} else if(word instanceof NLGElement) {
+			inflElement = (NLGElement) word;
+		}
+
+		return inflElement;
+
+	}
+
+
+	/**
 	 * A helper method to set the features on newly created pronoun words.
 	 * 
 	 * @param wordElement

@@ -62,11 +62,14 @@ public abstract class AbstractClauseHelper {
 		ListElement realisedElement = null;
 		NLGFactory phraseFactory = phrase.getFactory();
 		NLGElement splitVerb = null;
+		boolean interrogObj = false;
+
 
 		if (phrase != null) {
 			// vaudrypl added phrase argument to ListElement constructor
 			// to copy all features from the PhraseElement
 			realisedElement = new ListElement(phrase);
+			Object interrogativeType = phrase.getFeature(Feature.INTERROGATIVE_TYPE);
 			
 			NLGElement verbElement = phrase
 					.getFeatureAsElement(InternalFeature.VERB_PHRASE);
@@ -82,31 +85,70 @@ public abstract class AbstractClauseHelper {
 			addComplementiser(phrase, realisedElement);
 			addCuePhrase(phrase, realisedElement);
 
-			if (phrase.hasFeature(Feature.INTERROGATIVE_TYPE)
-					|| phrase.hasFeature(FrenchFeature.RELATIVE_PHRASE)) {
-				splitVerb = realiseInterrogative(phrase,
-						realisedElement, phraseFactory, verbElement);
+			if(phrase.hasFeature(Feature.INTERROGATIVE_TYPE) || phrase.hasFeature(FrenchFeature.RELATIVE_PHRASE)) {
+				Object inter = phrase.getFeature(Feature.INTERROGATIVE_TYPE);
+				interrogObj = (InterrogativeType.WHAT_OBJECT.equals(inter)
+						|| InterrogativeType.WHO_OBJECT.equals(inter)
+						|| InterrogativeType.HOW_PREDICATE.equals(inter)
+						|| InterrogativeType.HOW.equals(inter)
+						|| InterrogativeType.WHY.equals(inter)
+						|| InterrogativeType.WHERE.equals(inter)
+						|| InterrogativeType.WHEN.equals(inter));
+				splitVerb = realiseInterrogative(phrase, realisedElement, phraseFactory, verbElement);
 			} else {
-				phrase.getPhraseHelper()
-						.realiseList(
-								realisedElement,
-								phrase.getFeatureAsElementList(InternalFeature.FRONT_MODIFIERS),
-								DiscourseFunction.FRONT_MODIFIER);
+				phrase.getPhraseHelper().realiseList(
+						realisedElement,
+						phrase.getFeatureAsElementList(InternalFeature.FRONT_MODIFIERS),
+						DiscourseFunction.FRONT_MODIFIER);
 			}
 			addSubjectsToFront(phrase, realisedElement, splitVerb);
-
 			NLGElement passiveSplitVerb = addPassiveComplementsNumberPerson(
 					phrase, realisedElement, verbElement);
 
 			if (passiveSplitVerb != null) {
 				splitVerb = passiveSplitVerb;
 			}
-			realiseVerb(phrase, realisedElement, splitVerb, verbElement);
+			if (((SPhraseSpec) phrase).getVerb() != null){
+				realiseVerb(phrase, realisedElement, splitVerb, verbElement, interrogObj);
+				//For these types of interrogatives, search for the object, remove it at current position and put it in second position.
+				if(interrogativeType instanceof InterrogativeType
+						&& (interrogativeType.equals(InterrogativeType.HOW_ADJECTIVE)
+						|| interrogativeType.equals(InterrogativeType.WHICH)
+						|| interrogativeType.equals(InterrogativeType.HOW_MANY)
+						|| interrogativeType.equals(InterrogativeType.WHOSE))){
+					addObjectBeforeVerb(realisedElement);
+				}
+
+			}
+			//realiseVerb(phrase, realisedElement, splitVerb, verbElement, interrogObj);
 			addPassiveSubjects(phrase, realisedElement, phraseFactory);
 			addInterrogativeFrontModifiers(phrase, realisedElement);
 			addEndingTo(phrase, realisedElement, phraseFactory);
 		}
 		return realisedElement;
+	}
+
+	protected void addObjectBeforeVerb(ListElement realisedElement) {
+		List<NLGElement> alreadyRealisedElements = realisedElement.getChildren();
+		for(int vpIndex = 0; vpIndex < alreadyRealisedElements.size(); vpIndex++){
+			NLGElement alreadyRealisedElement = alreadyRealisedElements.get(vpIndex);
+			if(alreadyRealisedElement.getCategory().equalTo(PhraseCategory.VERB_PHRASE)){
+				List<NLGElement> vpComponents = alreadyRealisedElement.getChildren();
+				for(int vIndex = 0; vIndex < vpComponents.size(); vIndex++){
+					NLGElement vpComponent = vpComponents.get(vIndex);
+					if(vpComponent.hasFeature(InternalFeature.DISCOURSE_FUNCTION) && vpComponent.getFeature(InternalFeature.DISCOURSE_FUNCTION).equals(DiscourseFunction.OBJECT)){
+						//We add the adjective phrase to the front of the VP components, because in the
+						// HOW_ADJECTIVE, this comes always before the verb in interrogatives.
+						vpComponents.add(0,vpComponents.remove(vIndex));
+
+						((ListElement) alreadyRealisedElement).setComponents(vpComponents);
+						alreadyRealisedElements.set(vpIndex,alreadyRealisedElement);
+						realisedElement.setComponents(alreadyRealisedElements);
+						return;
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -226,22 +268,20 @@ public abstract class AbstractClauseHelper {
 
 	/**
 	 * Realises the verb part of the clause.
-	 * 
-	 * @param phrase
+	 *  @param phrase
 	 *            the <code>PhraseElement</code> representing this clause.
 	 * @param realisedElement
 	 *            the current realisation of the clause.
 	 * @param splitVerb
-	 *            an <code>NLGElement</code> representing the subjects that
-	 *            should split the verb
+ *            an <code>NLGElement</code> representing the subjects that
+ *            should split the verb
 	 * @param verbElement
-	 *            the <code>NLGElement</code> representing the verb phrase for
-	 *            this clause.
+*            the <code>NLGElement</code> representing the verb phrase for
+	 * @param interrogObj
 	 */
 	protected void realiseVerb(PhraseElement phrase,
-			ListElement realisedElement,
-			NLGElement splitVerb, NLGElement verbElement) {
-
+							   ListElement realisedElement,
+							   NLGElement splitVerb, NLGElement verbElement, boolean interrogObj) {
 		NLGElement currentElement = verbElement.realiseSyntax();
 		if (currentElement != null) {
 			if (splitVerb == null) {
@@ -269,8 +309,15 @@ public abstract class AbstractClauseHelper {
 					currentElement.setFeature(
 							InternalFeature.DISCOURSE_FUNCTION,
 							DiscourseFunction.VERB_PHRASE);
-					realisedElement.addComponent(currentElement);
-					realisedElement.addComponent(splitVerb);
+					if(interrogObj){
+						realisedElement.addComponent(currentElement);
+						realisedElement.addComponent(splitVerb);
+					}
+					else{
+						realisedElement.addComponent(splitVerb);
+						realisedElement.addComponent(currentElement);
+					}
+
 				}
 			}
 		}
@@ -452,8 +499,6 @@ public abstract class AbstractClauseHelper {
 	 * 
 	 * @param phrase
 	 *            the <code>PhraseElement</code> representing this clause.
-	 * @param realisedElement
-	 *            the current realisation of the clause.
 	 */
 	protected ListElement realiseSubjects(PhraseElement phrase) {
 

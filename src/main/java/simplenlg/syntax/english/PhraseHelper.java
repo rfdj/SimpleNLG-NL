@@ -14,7 +14,7 @@
  * The Initial Developer of the Original Code is Ehud Reiter, Albert Gatt and Dave Westwater.
  * Portions created by Ehud Reiter, Albert Gatt and Dave Westwater are Copyright (C) 2010-11 The University of Aberdeen. All Rights Reserved.
  *
- * Contributor(s): Ehud Reiter, Albert Gatt, Dave Wewstwater, Roman Kutlak, Margaret Mitchell, Pierre-Luc Vaudry.
+ * Contributor(s): Ehud Reiter, Albert Gatt, Dave Wewstwater, Roman Kutlak, Margaret Mitchell.
  */
 package simplenlg.syntax.english;
 
@@ -36,7 +36,7 @@ import simplenlg.framework.PhraseElement;
  * This class contains static methods to help the syntax processor realise
  * phrases.
  * </p>
- * 
+ *
  * @author E. Reiter and D. Westwater, University of Aberdeen.
  * @version 4.0
  */
@@ -44,7 +44,7 @@ abstract class PhraseHelper {
 
 	/**
 	 * The main method for realising phrases.
-	 * 
+	 *
 	 * @param parent
 	 *            the <code>SyntaxProcessor</code> that called this method.
 	 * @param phrase
@@ -66,13 +66,14 @@ abstract class PhraseHelper {
 			PhraseHelper.realiseList(parent, realisedElement, phrase
 					.getPostModifiers(), DiscourseFunction.POST_MODIFIER);
 		}
+
 		return realisedElement;
 	}
 
 	/**
 	 * Realises the complements of the phrase adding <em>and</em> where
 	 * appropriate.
-	 * 
+	 *
 	 * @param parent
 	 *            the parent <code>SyntaxProcessor</code> that will do the
 	 *            realisation of the complementiser.
@@ -82,7 +83,7 @@ abstract class PhraseHelper {
 	 *            the current realisation of the noun phrase.
 	 */
 	private static void realiseComplements(SyntaxProcessor parent,
-			PhraseElement phrase, ListElement realisedElement) {
+										   PhraseElement phrase, ListElement realisedElement) {
 
 		boolean firstProcessed = false;
 		NLGElement currentElement = null;
@@ -106,7 +107,7 @@ abstract class PhraseHelper {
 
 	/**
 	 * Realises the head element of the phrase.
-	 * 
+	 *
 	 * @param parent
 	 *            the parent <code>SyntaxProcessor</code> that will do the
 	 *            realisation of the complementiser.
@@ -116,7 +117,7 @@ abstract class PhraseHelper {
 	 *            the current realisation of the noun phrase.
 	 */
 	private static void realiseHead(SyntaxProcessor parent,
-			PhraseElement phrase, ListElement realisedElement) {
+									PhraseElement phrase, ListElement realisedElement) {
 
 		NLGElement head = phrase.getHead();
 		if (head != null) {
@@ -138,7 +139,7 @@ abstract class PhraseHelper {
 	 * Iterates through a <code>List</code> of <code>NLGElement</code>s
 	 * realisation each element and adding it to the on-going realisation of
 	 * this clause.
-	 * 
+	 *
 	 * @param parent
 	 *            the parent <code>SyntaxProcessor</code> that will do the
 	 *            realisation of the complementiser.
@@ -153,8 +154,8 @@ abstract class PhraseHelper {
 	 *            set and any existing discourse function is kept.
 	 */
 	static void realiseList(SyntaxProcessor parent,
-			ListElement realisedElement, List<NLGElement> elementList,
-			DiscourseFunction function) {
+							ListElement realisedElement, List<NLGElement> elementList,
+							DiscourseFunction function) {
 
 		// AG: Change here: the original list structure is kept, i.e. rather
 		// than taking the elements of the list and putting them in the realised
@@ -163,12 +164,18 @@ abstract class PhraseHelper {
 		// orthography and morphology processing later.
 		ListElement realisedList = new ListElement();
 		NLGElement currentElement = null;
+
 		for (NLGElement eachElement : elementList) {
 			currentElement = parent.realise(eachElement);
 
 			if (currentElement != null) {
 				currentElement.setFeature(InternalFeature.DISCOURSE_FUNCTION,
 						function);
+
+				if (eachElement.getFeatureAsBoolean(Feature.APPOSITIVE).booleanValue()) {
+					currentElement.setFeature(Feature.APPOSITIVE, true);
+				}
+
 				// realisedElement.addComponent(currentElement);
 				realisedList.addComponent(currentElement);
 			}
@@ -181,7 +188,7 @@ abstract class PhraseHelper {
 
 	/**
 	 * Determines if the given phrase has an expletive as a subject.
-	 * 
+	 *
 	 * @param phrase
 	 *            the <code>PhraseElement</code> to be examined.
 	 * @return <code>true</code> if the phrase has an expletive subject.

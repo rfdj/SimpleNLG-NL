@@ -14,7 +14,7 @@
  * The Initial Developer of the Original Code is Ehud Reiter, Albert Gatt and Dave Westwater.
  * Portions created by Ehud Reiter, Albert Gatt and Dave Westwater are Copyright (C) 2010-11 The University of Aberdeen. All Rights Reserved.
  *
- * Contributor(s): Ehud Reiter, Albert Gatt, Dave Wewstwater, Roman Kutlak, Margaret Mitchell, Pierre-Luc Vaudry.
+ * Contributor(s): Ehud Reiter, Albert Gatt, Dave Wewstwater, Roman Kutlak, Margaret Mitchell.
  */
 package simplenlg.syntax.english;
 
@@ -41,7 +41,7 @@ import simplenlg.framework.WordElement;
  * This class contains static methods to help the syntax processor realise noun
  * phrases.
  * </p>
- * 
+ *
  * @author E. Reiter and D. Westwater, University of Aberdeen.
  * @version 4.0
  */
@@ -61,7 +61,7 @@ abstract class NounPhraseHelper {
 
 	/**
 	 * The main method for realising noun phrases.
-	 * 
+	 *
 	 * @param parent
 	 *            the <code>SyntaxProcessor</code> that called this method.
 	 * @param phrase
@@ -83,19 +83,20 @@ abstract class NounPhraseHelper {
 				realisePreModifiers(phrase, parent, realisedElement);
 				realiseHeadNoun(phrase, parent, realisedElement);
 				PhraseHelper.realiseList(parent, realisedElement, phrase
-						.getFeatureAsElementList(InternalFeature.COMPLEMENTS),
+								.getFeatureAsElementList(InternalFeature.COMPLEMENTS),
 						DiscourseFunction.COMPLEMENT);
 
 				PhraseHelper.realiseList(parent, realisedElement, phrase
 						.getPostModifiers(), DiscourseFunction.POST_MODIFIER);
 			}
 		}
+
 		return realisedElement;
 	}
 
 	/**
 	 * Realises the head noun of the noun phrase.
-	 * 
+	 *
 	 * @param phrase
 	 *            the <code>PhraseElement</code> representing this noun phrase.
 	 * @param parent
@@ -105,10 +106,12 @@ abstract class NounPhraseHelper {
 	 *            the current realisation of the noun phrase.
 	 */
 	private static void realiseHeadNoun(PhraseElement phrase,
-			SyntaxProcessor parent, ListElement realisedElement) {
+										SyntaxProcessor parent, ListElement realisedElement) {
 		NLGElement headElement = phrase.getHead();
 
 		if (headElement != null) {
+			headElement.setFeature(Feature.ELIDED, phrase
+					.getFeature(Feature.ELIDED));
 			headElement.setFeature(LexicalFeature.GENDER, phrase
 					.getFeature(LexicalFeature.GENDER));
 			headElement.setFeature(InternalFeature.ACRONYM, phrase
@@ -131,7 +134,7 @@ abstract class NounPhraseHelper {
 	/**
 	 * Realises the pre-modifiers of the noun phrase. Before being realised,
 	 * pre-modifiers undergo some basic sorting based on adjective ordering.
-	 * 
+	 *
 	 * @param phrase
 	 *            the <code>PhraseElement</code> representing this noun phrase.
 	 * @param parent
@@ -141,7 +144,7 @@ abstract class NounPhraseHelper {
 	 *            the current realisation of the noun phrase.
 	 */
 	private static void realisePreModifiers(PhraseElement phrase,
-			SyntaxProcessor parent, ListElement realisedElement) {
+											SyntaxProcessor parent, ListElement realisedElement) {
 
 		List<NLGElement> preModifiers = phrase.getPreModifiers();
 		if (phrase.getFeatureAsBoolean(Feature.ADJECTIVE_ORDERING)
@@ -154,7 +157,7 @@ abstract class NounPhraseHelper {
 
 	/**
 	 * Realises the specifier of the noun phrase.
-	 * 
+	 *
 	 * @param phrase
 	 *            the <code>PhraseElement</code> representing this noun phrase.
 	 * @param parent
@@ -164,19 +167,20 @@ abstract class NounPhraseHelper {
 	 *            the current realisation of the noun phrase.
 	 */
 	private static void realiseSpecifier(PhraseElement phrase,
-			SyntaxProcessor parent, ListElement realisedElement) {
+										 SyntaxProcessor parent, ListElement realisedElement) {
 		NLGElement specifierElement = phrase
 				.getFeatureAsElement(InternalFeature.SPECIFIER);
 
 		if (specifierElement != null
 				&& !phrase.getFeatureAsBoolean(InternalFeature.RAISED)
-						.booleanValue()) {
-
-			if (!specifierElement.isA(LexicalCategory.PRONOUN)) {
+				.booleanValue() && !phrase.getFeatureAsBoolean(Feature.ELIDED).booleanValue()) {
+			if (!specifierElement.isA(LexicalCategory.PRONOUN) && specifierElement.getCategory() != PhraseCategory.NOUN_PHRASE) {
 				specifierElement.setFeature(Feature.NUMBER, phrase
 						.getFeature(Feature.NUMBER));
 			}
+
 			NLGElement currentElement = parent.realise(specifierElement);
+
 			if (currentElement != null) {
 				currentElement.setFeature(InternalFeature.DISCOURSE_FUNCTION,
 						DiscourseFunction.SPECIFIER);
@@ -188,7 +192,7 @@ abstract class NounPhraseHelper {
 	/**
 	 * Sort the list of premodifiers for this noun phrase using adjective
 	 * ordering (ie, "big" comes before "red")
-	 * 
+	 *
 	 * @param originalModifiers
 	 *            the original listing of the premodifiers.
 	 * @return the sorted <code>List</code> of premodifiers.
@@ -221,7 +225,7 @@ abstract class NounPhraseHelper {
 
 	/**
 	 * Determines the minimim position at which this modifier can occur.
-	 * 
+	 *
 	 * @param modifier
 	 *            the modifier to be checked.
 	 * @return the minimum position for this modifier.
@@ -254,7 +258,7 @@ abstract class NounPhraseHelper {
 
 	/**
 	 * Determines the maximim position at which this modifier can occur.
-	 * 
+	 *
 	 * @param modifier
 	 *            the modifier to be checked.
 	 * @return the maximum position for this modifier.
@@ -287,7 +291,7 @@ abstract class NounPhraseHelper {
 	 * Retrieves the correct representation of the word from the element. This
 	 * method will find the <code>WordElement</code>, if it exists, for the
 	 * given phrase or inflected word.
-	 * 
+	 *
 	 * @param element
 	 *            the <code>NLGElement</code> from which the head is required.
 	 * @return the <code>WordElement</code>
@@ -302,13 +306,14 @@ abstract class NounPhraseHelper {
 		} else if (element instanceof PhraseElement) {
 			head = getHeadWordElement(((PhraseElement) element).getHead());
 		}
+
 		return head;
 	}
 
 	/**
 	 * Creates the appropriate pronoun if the subject of the noun phrase is
 	 * pronominal.
-	 * 
+	 *
 	 * @param parent
 	 *            the parent <code>SyntaxProcessor</code> that will do the
 	 *            realisation of the complementiser.
@@ -317,7 +322,7 @@ abstract class NounPhraseHelper {
 	 * @return the <code>NLGElement</code> representing the pronominal.
 	 */
 	private static NLGElement createPronoun(SyntaxProcessor parent,
-			PhraseElement phrase) {
+											PhraseElement phrase) {
 
 		String pronoun = "it"; //$NON-NLS-1$
 		NLGFactory phraseFactory = phrase.getFactory();
@@ -340,14 +345,16 @@ abstract class NounPhraseHelper {
 		NLGElement element;
 		NLGElement proElement = phraseFactory.createWord(pronoun,
 				LexicalCategory.PRONOUN);
-		
+
 		if (proElement instanceof WordElement) {
 			element = new InflectedWordElement((WordElement) proElement);
-			element.setFeature(LexicalFeature.GENDER, ((WordElement) proElement).getFeature(LexicalFeature.GENDER));			
+			element.setFeature(LexicalFeature.GENDER, ((WordElement) proElement).getFeature(LexicalFeature.GENDER));
+			// Ehud - also copy over person
+			element.setFeature(Feature.PERSON, ((WordElement) proElement).getFeature(Feature.PERSON));
 		} else {
 			element = proElement;
 		}
-		
+
 		element.setFeature(InternalFeature.DISCOURSE_FUNCTION,
 				DiscourseFunction.SPECIFIER);
 		element.setFeature(Feature.POSSESSIVE, phrase
@@ -355,11 +362,11 @@ abstract class NounPhraseHelper {
 		element
 				.setFeature(Feature.NUMBER, phrase.getFeature(Feature.NUMBER));
 
-		
+
 		if (phrase.hasFeature(InternalFeature.DISCOURSE_FUNCTION)) {
 			element.setFeature(InternalFeature.DISCOURSE_FUNCTION, phrase
 					.getFeature(InternalFeature.DISCOURSE_FUNCTION));
-		}		
+		}
 
 		return element;
 	}
