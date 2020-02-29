@@ -127,7 +127,6 @@ public class ClauseHelper extends AbstractClauseHelper {
 				 phrase.removeFeature(InternalFeature.SUBJECTS);
 				break;
 			case HOW_MANY:
-			case WHICH:
 				realiseInterrogativeKeyWord("how", LexicalCategory.PRONOUN, realisedElement, //$NON-NLS-1$
 						phraseFactory);
 				realiseInterrogativeKeyWord("many", LexicalCategory.ADVERB, realisedElement, //$NON-NLS-1$
@@ -150,6 +149,10 @@ public class ClauseHelper extends AbstractClauseHelper {
 //				splitVerb = realiseObjectWHInterrogative("how", phrase, realisedElement, phraseFactory);
 //				break;
 			case HOW_ADJECTIVE:
+				realiseInterrogativeKeyWord(((InterrogativeType) type).getString(), LexicalCategory.PRONOUN, realisedElement, //$NON-NLS-1$
+						phraseFactory);
+				break;
+			case WHICH:
 			case WHOSE:
 				realiseInterrogativeKeyWord(((InterrogativeType) type).getString(), LexicalCategory.PRONOUN, realisedElement, //$NON-NLS-1$
 						phraseFactory);
@@ -189,10 +192,7 @@ public class ClauseHelper extends AbstractClauseHelper {
 
 		// if (!Tense.FUTURE.equals(phrase.getFeature(Feature.TENSE)) &&
 		// !copular) {
-		if(phrase.hasFeature(Feature.INTERROGATIVE_TYPE) && phrase.getFeature(Feature.INTERROGATIVE_TYPE).equals(InterrogativeType.HOW_PREDICATE)){
-			splitVerb = realiseSubjects(phrase);
-		}
-		else if(!hasAuxiliary(phrase) && !phrase.getVerbPhraseHelper().isCopular(phrase)) {
+		if(!hasAuxiliary(phrase) && !phrase.getVerbPhraseHelper().isCopular(phrase)) {
 			addDoAuxiliary(phrase, phraseFactory, realisedElement);
 
 		} else if(!phrase.getFeatureAsBoolean(Feature.PASSIVE).booleanValue()) {
@@ -207,8 +207,8 @@ public class ClauseHelper extends AbstractClauseHelper {
 	 * correctly)
 	 */
 	private boolean hasAuxiliary(PhraseElement phrase) {
-		return phrase.hasFeature(Feature.MODAL) || phrase.getFeatureAsBoolean(Feature.PERFECT).booleanValue()
-				|| phrase.getFeatureAsBoolean(Feature.PROGRESSIVE).booleanValue()
+		return phrase.hasFeature(Feature.MODAL) || phrase.getFeatureAsBoolean(Feature.PERFECT)
+				|| phrase.getFeatureAsBoolean(Feature.PROGRESSIVE)
 				|| Tense.FUTURE.equals(phrase.getFeature(Feature.TENSE));
 	}
 

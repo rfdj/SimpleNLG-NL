@@ -137,7 +137,8 @@ public class EnglishInterrogativeTest {
         clause.setSubject(subject);
         NPPhraseSpec object = factory.createNounPhrase("DEVICE");
         object.setFeature(LexicalFeature.PLURAL,true);
-        object.setNoun("computer");
+        object.setNoun("computers");
+        object.addPreModifier("good");
         clause.setObject(object);
         clause.setVerb("give");
         PPPhraseSpec pp = factory.createPrepositionPhrase();
@@ -146,7 +147,7 @@ public class EnglishInterrogativeTest {
         clause.addComplement(pp);
         clause.setFeature(Feature.INTERROGATIVE_TYPE, InterrogativeType.HOW_MANY);
         String output = realiser.realiseSentence(clause);
-        collector.checkThat(output, equalTo("How many computers do you give to John?"));
+        collector.checkThat(output, equalTo("How many good computers do you give to John?"));
     }
 
     @Test
@@ -200,23 +201,7 @@ public class EnglishInterrogativeTest {
         collector.checkThat(output, equalTo("How do you think about John?"));
     }
 
-    @Test
-    public void basicInterrogativeWhich(){
-        SPhraseSpec clause = factory.createClause();
-        NPPhraseSpec subject = factory.createNounPhrase("YOU");
-        subject.setFeature(Feature.PRONOMINAL, true);
-        subject.setFeature(Feature.PERSON, Person.SECOND);
-        clause.setSubject(subject);
-        clause.setObject("thoughts");
-        clause.setVerb("have");
-        PPPhraseSpec pp = factory.createPrepositionPhrase();
-        pp.setObject("John");
-        pp.setPreposition("about");
-        clause.addComplement(pp);
-        clause.setFeature(Feature.INTERROGATIVE_TYPE, InterrogativeType.WHICH);
-        String output = realiser.realiseSentence(clause);
-        collector.checkThat(output, equalTo("Which thoughts do you have about John?"));
-    }
+
 
     @Test
     public void basicInterrogativeHowPredicate(){
@@ -250,7 +235,7 @@ public class EnglishInterrogativeTest {
 
         AdjPhraseSpec adjective = factory.createAdjectivePhrase();
         adjective.setAdjective("smart");
-        verb.setComplement(adjective);
+        clause.setObject(adjective);
 
         clause.setVerb(verb);
         clause.setFeature(Feature.INTERROGATIVE_TYPE, InterrogativeType.HOW_ADJECTIVE);
@@ -304,7 +289,21 @@ public class EnglishInterrogativeTest {
         clause.setFeature(Feature.INTERROGATIVE_TYPE, InterrogativeType.WHOSE);
         clause.setFeature(Feature.PERFECT,true);
         String output = realiser.realiseSentence(clause);
-        collector.checkThat(output, equalTo("Whose keys have you gotten?"));
+        collector.checkThat(output, equalTo("Whose keys do you have gotten?"));
+    }
+
+    @Test
+    public void basicInterrogativeWhich(){
+        SPhraseSpec clause = factory.createClause();
+        NPPhraseSpec subject = factory.createNounPhrase("YOU");
+        subject.setFeature(Feature.PRONOMINAL, true);
+        subject.setFeature(Feature.PERSON, Person.SECOND);
+        clause.setSubject(subject);
+        clause.setVerb("get");
+        clause.setObject("keys");
+        clause.setFeature(Feature.INTERROGATIVE_TYPE, InterrogativeType.WHICH);
+        String output = realiser.realiseSentence(clause);
+        collector.checkThat(output, equalTo("Which keys do you get?"));
     }
 
 }

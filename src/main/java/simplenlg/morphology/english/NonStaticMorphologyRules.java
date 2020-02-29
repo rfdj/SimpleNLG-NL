@@ -77,9 +77,11 @@ public class NonStaticMorphologyRules implements MorphologyRulesInterface {
 		// base form from baseWord if it exists, otherwise from element
 		String baseForm = getBaseForm(element, baseWord);
 
+		//Added that it should be plural if the parent is plural.
 		if (element.isPlural()
 				&& !element.getFeatureAsBoolean(LexicalFeature.PROPER)
-						.booleanValue()) {
+				|| element.getParent().hasFeature(LexicalFeature.PLURAL)
+				&& element.getParent().getFeatureAsBoolean(LexicalFeature.PLURAL)) {
 
 			String pluralForm = null;
 

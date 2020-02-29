@@ -84,9 +84,9 @@ public abstract class AbstractClauseHelper {
 			copyFrontModifiers(phrase, verbElement);
 			addComplementiser(phrase, realisedElement);
 			addCuePhrase(phrase, realisedElement);
+			Object inter = phrase.getFeature(Feature.INTERROGATIVE_TYPE);
 
 			if(phrase.hasFeature(Feature.INTERROGATIVE_TYPE) || phrase.hasFeature(FrenchFeature.RELATIVE_PHRASE)) {
-				Object inter = phrase.getFeature(Feature.INTERROGATIVE_TYPE);
 				interrogObj = (InterrogativeType.WHAT_OBJECT.equals(inter)
 						|| InterrogativeType.WHO_OBJECT.equals(inter)
 						|| InterrogativeType.HOW_PREDICATE.equals(inter)
@@ -102,6 +102,7 @@ public abstract class AbstractClauseHelper {
 						DiscourseFunction.FRONT_MODIFIER);
 			}
 			addSubjectsToFront(phrase, realisedElement, splitVerb);
+
 			NLGElement passiveSplitVerb = addPassiveComplementsNumberPerson(
 					phrase, realisedElement, verbElement);
 
@@ -129,26 +130,54 @@ public abstract class AbstractClauseHelper {
 	}
 
 	protected void addObjectBeforeVerb(ListElement realisedElement) {
+		// Search for DISCOURSE_FUNCTION object in the sentence
+		// Save the object in a temporary variable
+		// Remove the object from the vpComponents
+		// Add it to just before the first verb in a phrase
+		// Set the vp components
 		List<NLGElement> alreadyRealisedElements = realisedElement.getChildren();
-		for(int vpIndex = 0; vpIndex < alreadyRealisedElements.size(); vpIndex++){
+		//The object to search
+		ListElement directObject = null;
+		for(int vpIndex = 0; vpIndex < alreadyRealisedElements.size(); vpIndex++) {
 			NLGElement alreadyRealisedElement = alreadyRealisedElements.get(vpIndex);
-			if(alreadyRealisedElement.getCategory().equalTo(PhraseCategory.VERB_PHRASE)){
-				List<NLGElement> vpComponents = alreadyRealisedElement.getChildren();
-				for(int vIndex = 0; vIndex < vpComponents.size(); vIndex++){
-					NLGElement vpComponent = vpComponents.get(vIndex);
-					if(vpComponent.hasFeature(InternalFeature.DISCOURSE_FUNCTION) && vpComponent.getFeature(InternalFeature.DISCOURSE_FUNCTION).equals(DiscourseFunction.OBJECT)){
-						//We add the adjective phrase to the front of the VP components, because in the
-						// HOW_ADJECTIVE, this comes always before the verb in interrogatives.
-						vpComponents.add(0,vpComponents.remove(vIndex));
-
-						((ListElement) alreadyRealisedElement).setComponents(vpComponents);
-						alreadyRealisedElements.set(vpIndex,alreadyRealisedElement);
-						realisedElement.setComponents(alreadyRealisedElements);
-						return;
+			if (alreadyRealisedElement.getCategory().equalTo(PhraseCategory.VERB_PHRASE)) {
+				if (alreadyRealisedElement.getChildren() != null) {
+					List<NLGElement> children = alreadyRealisedElement.getChildren();
+					for (int childIndex = 0; childIndex < children.size(); childIndex++) {
+						NLGElement child = children.get(childIndex);
+						if (child.hasFeature(InternalFeature.DISCOURSE_FUNCTION) && child.getFeature(InternalFeature.DISCOURSE_FUNCTION).equals(DiscourseFunction.OBJECT)) {
+							directObject = (ListElement) children.remove(childIndex);
+						}
 					}
+					((ListElement) alreadyRealisedElement).setComponents(children);
 				}
 			}
 		}
+		for(int vpIndex = 0; vpIndex < alreadyRealisedElements.size(); vpIndex++) {
+			NLGElement alreadyRealisedElement = alreadyRealisedElements.get(vpIndex);
+			if (alreadyRealisedElement.getCategory().equalTo(PhraseCategory.VERB_PHRASE) && directObject != null) {
+				alreadyRealisedElements.add(vpIndex,directObject);
+				realisedElement.setComponents(alreadyRealisedElements);
+				return;
+			}
+		}
+
+//				List<NLGElement> vpComponents = alreadyRealisedElement.getChildren();
+//				for(int vIndex = 0; vIndex < vpComponents.size(); vIndex++){
+//					NLGElement vpComponent = vpComponents.get(vIndex);
+//					if(vpComponent.hasFeature(InternalFeature.DISCOURSE_FUNCTION) && vpComponent.getFeature(InternalFeature.DISCOURSE_FUNCTION).equals(DiscourseFunction.OBJECT)){
+//						//We add the adjective phrase to the front of the VP components, because in the
+//						// HOW_ADJECTIVE, this comes always before the verb in interrogatives.
+//						vpComponents.add(0,vpComponents.remove(vIndex));
+//
+//						((ListElement) alreadyRealisedElement).setComponents(vpComponents);
+//						alreadyRealisedElements.set(vpIndex,alreadyRealisedElement);
+//						realisedElement.setComponents(alreadyRealisedElements);
+//						return;
+//					}
+//				}
+
+
 	}
 
 	/**
