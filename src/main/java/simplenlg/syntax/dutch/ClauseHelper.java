@@ -435,7 +435,7 @@ public class ClauseHelper extends simplenlg.syntax.english.nonstatic.ClauseHelpe
 				ListElement realisedSubject = new ListElement(phrase);
 				//Realising subject to add later
 				super.addSubjectsToFront(phrase, realisedSubject,splitVerb);
-				if(this.addSubjectAfterVerb(realisedElement,realisedSubject)){
+				if(this.moveSubjectAfterVerb(realisedElement,realisedSubject)){
 					return;
 				}
 			}
@@ -446,9 +446,9 @@ public class ClauseHelper extends simplenlg.syntax.english.nonstatic.ClauseHelpe
 	/**
 	 * Method for adding the subject after the verb. Mainly used for Dutch interrogatives
 	 * @param realisedElement, the current list of realised elements
-	 * @param realisedSubject, the subject that has to go behind the verb
+	 * @param realisedSubject, the subject that has to go behind the verb, if no current subject is found
 	 */
-	private boolean addSubjectAfterVerb(ListElement realisedElement, ListElement realisedSubject){
+	private boolean moveSubjectAfterVerb(ListElement realisedElement, ListElement realisedSubject){
 		List<NLGElement> alreadyRealisedElements = realisedElement.getChildren();
 		for(int vpIndex = 0; vpIndex < alreadyRealisedElements.size(); vpIndex++){
 			NLGElement alreadyRealisedElement = alreadyRealisedElements.get(vpIndex);
@@ -465,7 +465,7 @@ public class ClauseHelper extends simplenlg.syntax.english.nonstatic.ClauseHelpe
 				}
 				for(int vIndex = 0; vIndex < vpComponents.size(); vIndex++){
 					NLGElement vpComponent = vpComponents.get(vIndex);
-					if(vpComponent.getCategory().equalTo(LexicalCategory.VERB)){
+					if(vpComponent.getCategory().equalTo(PhraseCategory.VERB_PHRASE) || vpComponent.getCategory().equalTo(LexicalCategory.VERB)){
 						//Add the realisedSubject directly after the first verb in the first verb phrase
 						vpComponents.add(vIndex+1,realisedSubject.getFirst());
 						((ListElement) alreadyRealisedElement).setComponents(vpComponents);
@@ -643,9 +643,7 @@ public class ClauseHelper extends simplenlg.syntax.english.nonstatic.ClauseHelpe
 							phraseFactory);
 					break;
 				case WHOSE:
-					realiseInterrogativeKeyWord("van", LexicalCategory.PRONOUN, realisedElement, //$NON-NLS-1$
-							phraseFactory);
-					realiseInterrogativeKeyWord("wie", LexicalCategory.PRONOUN, realisedElement, //$NON-NLS-1$
+					realiseInterrogativeKeyWord("wiens", LexicalCategory.PRONOUN, realisedElement, //$NON-NLS-1$
 							phraseFactory);
 					break;
 				case HOW_ADJECTIVE:
@@ -732,7 +730,7 @@ public class ClauseHelper extends simplenlg.syntax.english.nonstatic.ClauseHelpe
 				interrogObj = true;
 				addInterrogativeSpecifier(phrase, realisedElement);
 
-				if(interrogativeType.equals(InterrogativeType.WHO_SUBJECT)){
+				if(interrogativeType.equals(InterrogativeType.WHO_SUBJECT) || interrogativeType.equals(InterrogativeType.WHAT_SUBJECT)){
 					verbElement.setFeature(Feature.PERSON,Person.THIRD);
 				}
 				splitVerb = realiseInterrogative(phrase,
@@ -771,8 +769,11 @@ public class ClauseHelper extends simplenlg.syntax.english.nonstatic.ClauseHelpe
 					&& interrogativeType != InterrogativeType.WHY
 					&& interrogativeType != InterrogativeType.WHERE
 					&& interrogativeType != InterrogativeType.WHO_SUBJECT
-			)
+					&& interrogativeType != InterrogativeType.WHAT_SUBJECT){
 				addSubjectsToFront(phrase, realisedElement, splitVerb);
+			}
+
+
 
 			addPassiveSubjects(phrase, realisedElement, phraseFactory);
 		}

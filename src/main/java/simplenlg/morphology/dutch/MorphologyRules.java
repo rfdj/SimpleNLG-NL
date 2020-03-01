@@ -574,8 +574,8 @@ public class MorphologyRules extends simplenlg.morphology.english.NonStaticMorph
 		// base form from element if it exists, otherwise from baseWord 
 		String baseForm = getBaseForm(element, baseWord);
 		
-		if (element.isPlural()
-				&& !element.getFeatureAsBoolean(LexicalFeature.PROPER)) {
+		if (element.getParent() != null && element.getParent().hasFeature(LexicalFeature.PLURAL) && element.getParent().getFeatureAsBoolean(LexicalFeature.PLURAL)
+				|| element.isPlural() && !element.getFeatureAsBoolean(LexicalFeature.PROPER)) {
 
 			String pluralForm = null;
 

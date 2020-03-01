@@ -3,10 +3,7 @@ package dutch;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
-import simplenlg.features.Feature;
-import simplenlg.features.InterrogativeType;
-import simplenlg.features.Person;
-import simplenlg.features.Tense;
+import simplenlg.features.*;
 import simplenlg.framework.NLGFactory;
 import simplenlg.lexicon.Lexicon;
 import simplenlg.phrasespec.*;
@@ -247,10 +244,11 @@ public class DutchInterrogativeTest {
         adjective.setAdjective("slim");
 
         clause.setObject(adjective);
+        clause.addComplement("gewoonlijk");
         clause.setFeature(Feature.INTERROGATIVE_TYPE, InterrogativeType.HOW_ADJECTIVE);
 
         String output = realiser_nl.realiseSentence(clause);
-        collector.checkThat(output, equalTo("Hoe slim is Jan?"));
+        collector.checkThat(output, equalTo("Hoe slim is Jan gewoonlijk?"));
 
 
     }
@@ -266,11 +264,44 @@ public class DutchInterrogativeTest {
         PPPhraseSpec pp = factory_nl.createPrepositionPhrase();
         pp.setObject("Jan");
         pp.setPreposition("over");
-        clause.addComplement(pp);
+        clause.setObject(pp);
         clause.setFeature(Feature.INTERROGATIVE_TYPE, InterrogativeType.HOW_COME);
         clause.setFeature(Feature.TENSE, Tense.FUTURE);
         String output = realiser_nl.realiseSentence(clause);
-        collector.checkThat(output, equalTo("Hoezo zal jij denken over Jan?"));
+        collector.checkThat(output, equalTo("Hoezo zal jij over Jan denken?"));
+    }
+
+    @Test
+    public void basicInterrogativeWhat(){
+        SPhraseSpec clause = factory_nl.createClause();
+        NPPhraseSpec subject = factory_nl.createNounPhrase("YOU");
+        subject.setFeature(Feature.PRONOMINAL, true);
+        subject.setFeature(Feature.PERSON, Person.SECOND);
+        clause.setSubject(subject);
+        clause.setVerb("motiveren");
+        clause.setObject("Jan");
+        clause.setFeature(Feature.INTERROGATIVE_TYPE, InterrogativeType.WHAT_SUBJECT);
+        clause.setFeature(Feature.TENSE, Tense.FUTURE);
+        clause.setFeature(Feature.PERFECT,true);
+        String output = realiser_nl.realiseSentence(clause);
+        collector.checkThat(output, equalTo("Wat zal Jan hebben gemotiveerd?"));
+    }
+
+    @Test
+    public void basicInterrogativeWhose(){
+        SPhraseSpec clause = factory_nl.createClause();
+        NPPhraseSpec subject = factory_nl.createNounPhrase("YOU");
+        subject.setFeature(Feature.PRONOMINAL, true);
+        subject.setFeature(Feature.PERSON, Person.SECOND);
+        clause.setSubject(subject);
+        clause.setVerb("krijgen");
+        NPPhraseSpec object = factory_nl.createNounPhrase("sleutels");
+        object.setFeature(LexicalFeature.PLURAL,true);
+        clause.setObject(object);
+        clause.setFeature(Feature.INTERROGATIVE_TYPE, InterrogativeType.WHOSE);
+        clause.setFeature(Feature.PERFECT,true);
+        String output = realiser_nl.realiseSentence(clause);
+        collector.checkThat(output, equalTo("Wiens sleutels heb jij gekregen?"));
     }
 
 

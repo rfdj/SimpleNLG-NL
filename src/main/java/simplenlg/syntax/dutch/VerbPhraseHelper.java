@@ -216,7 +216,6 @@ public class VerbPhraseHelper extends simplenlg.syntax.english.nonstatic.VerbPhr
 							&& !phrase.getFeatureAsBoolean(Feature.PASSIVE)) {
 
 						List<NLGElement> complements = phrase.getFeatureAsElementList(InternalFeature.COMPLEMENTS);
-
 						for (NLGElement complement : complements) {
 
 							Object discourseFunction = complement.getFeature(InternalFeature.DISCOURSE_FUNCTION);

@@ -136,8 +136,8 @@ public class EnglishInterrogativeTest {
         subject.setFeature(Feature.PERSON, Person.SECOND);
         clause.setSubject(subject);
         NPPhraseSpec object = factory.createNounPhrase("DEVICE");
-        object.setFeature(LexicalFeature.PLURAL,true);
         object.setNoun("computers");
+        object.setFeature(LexicalFeature.PLURAL,true);
         object.addPreModifier("good");
         clause.setObject(object);
         clause.setVerb("give");
@@ -216,12 +216,14 @@ public class EnglishInterrogativeTest {
         clause.setObject(subject);
 
         VPPhraseSpec verb = factory.createVerbPhrase();
+        verb.setFeature(Feature.TENSE,Tense.PAST);
         verb.setVerb("be");
+        clause.addComplement("normally");
         clause.setVerb(verb);
         clause.setFeature(Feature.TENSE, Tense.PAST);
         clause.setFeature(Feature.INTERROGATIVE_TYPE, InterrogativeType.HOW_PREDICATE);
         String output = realiser.realiseSentence(clause);
-        collector.checkThat(output, equalTo("How was your holiday in Paris?"));
+        collector.checkThat(output, equalTo("How was your holiday in Paris normally?"));
     }
 
     @Test
@@ -232,15 +234,18 @@ public class EnglishInterrogativeTest {
 
         VPPhraseSpec verb = factory.createVerbPhrase();
         verb.setVerb("are");
+        verb.setFeature(Feature.TENSE,Tense.PAST);
 
         AdjPhraseSpec adjective = factory.createAdjectivePhrase();
         adjective.setAdjective("smart");
         clause.setObject(adjective);
 
         clause.setVerb(verb);
+
         clause.setFeature(Feature.INTERROGATIVE_TYPE, InterrogativeType.HOW_ADJECTIVE);
+        clause.addComplement("usually");
         String output = realiser.realiseSentence(clause);
-        collector.checkThat(output, equalTo("How smart is John?"));
+        collector.checkThat(output, equalTo("How smart was John usually?"));
     }
 
     @Test

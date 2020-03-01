@@ -32,14 +32,7 @@ import simplenlg.features.LexicalFeature;
 import simplenlg.features.NumberAgreement;
 import simplenlg.features.Person;
 import simplenlg.features.french.FrenchFeature;
-import simplenlg.framework.CoordinatedPhraseElement;
-import simplenlg.framework.LexicalCategory;
-import simplenlg.framework.ListElement;
-import simplenlg.framework.NLGElement;
-import simplenlg.framework.NLGFactory;
-import simplenlg.framework.PhraseCategory;
-import simplenlg.framework.PhraseElement;
-import simplenlg.framework.WordElement;
+import simplenlg.framework.*;
 import simplenlg.lexicon.Lexicon;
 import simplenlg.phrasespec.NPPhraseSpec;
 import simplenlg.phrasespec.SPhraseSpec;
@@ -70,7 +63,7 @@ public abstract class AbstractClauseHelper {
 			// to copy all features from the PhraseElement
 			realisedElement = new ListElement(phrase);
 			Object interrogativeType = phrase.getFeature(Feature.INTERROGATIVE_TYPE);
-			
+
 			NLGElement verbElement = phrase
 					.getFeatureAsElement(InternalFeature.VERB_PHRASE);
 
@@ -102,7 +95,6 @@ public abstract class AbstractClauseHelper {
 						DiscourseFunction.FRONT_MODIFIER);
 			}
 			addSubjectsToFront(phrase, realisedElement, splitVerb);
-
 			NLGElement passiveSplitVerb = addPassiveComplementsNumberPerson(
 					phrase, realisedElement, verbElement);
 
@@ -119,14 +111,55 @@ public abstract class AbstractClauseHelper {
 						|| interrogativeType.equals(InterrogativeType.WHOSE))){
 					addObjectBeforeVerb(realisedElement);
 				}
-
 			}
+
 			//realiseVerb(phrase, realisedElement, splitVerb, verbElement, interrogObj);
 			addPassiveSubjects(phrase, realisedElement, phraseFactory);
 			addInterrogativeFrontModifiers(phrase, realisedElement);
 			addEndingTo(phrase, realisedElement, phraseFactory);
 		}
 		return realisedElement;
+	}
+
+	/**
+	 * Method for adding the subject after the verb. Mainly used for Dutch interrogatives
+	 * @param realisedElement, the current list of realised elements
+	 */
+	private boolean moveSubjectAfterVerb(ListElement realisedElement){
+		ListElement realisedSubject = null;
+		List<NLGElement> alreadyRealisedElements = realisedElement.getChildren();
+		for(int vpIndex = 0; vpIndex < alreadyRealisedElements.size(); vpIndex++){
+			NLGElement alreadyRealisedElement = alreadyRealisedElements.get(vpIndex);
+			// Look up the subject and remove it from its current position
+			if(alreadyRealisedElement.hasFeature(InternalFeature.DISCOURSE_FUNCTION) && alreadyRealisedElement.getFeature(InternalFeature.DISCOURSE_FUNCTION).equals(DiscourseFunction.SUBJECT)){
+				realisedSubject = (ListElement) alreadyRealisedElements.remove(vpIndex);
+				break;
+			}
+		}
+		// Loop through the new realised elements to put the subject after the first verb found
+		for(int vpIndex = 0; vpIndex < alreadyRealisedElements.size(); vpIndex++){
+			NLGElement alreadyRealisedElement = alreadyRealisedElements.get(vpIndex);
+			List<NLGElement> vpComponents = alreadyRealisedElement.getChildren();
+			// Look up the first verb
+			if(vpComponents != null){
+				for(int vIndex = 0; vIndex < vpComponents.size(); vIndex++){
+					NLGElement vpComponent = vpComponents.get(vIndex);
+					if(vpComponent.getCategory().equalTo(PhraseCategory.VERB_PHRASE) || vpComponent.getCategory().equalTo(LexicalCategory.VERB)){
+						//Add the realisedSubject directly after the first verb in the first verb phrase
+						vpComponents.add(vIndex+1,realisedSubject);
+						((ListElement) alreadyRealisedElement).setComponents(vpComponents);
+						alreadyRealisedElements.set(vpIndex,alreadyRealisedElement);
+						realisedElement.setComponents(alreadyRealisedElements);
+						return true;
+					}
+				}
+			}
+
+
+		}
+
+
+		return false;
 	}
 
 	protected void addObjectBeforeVerb(ListElement realisedElement) {
@@ -516,7 +549,8 @@ public abstract class AbstractClauseHelper {
 				&& !Form.IMPERATIVE.equals(phrase.getFeature(Feature.FORM))
 				&& !phrase.getFeatureAsBoolean(Feature.PASSIVE).booleanValue()
 				&& splitVerb == null
-				&& interrogative != InterrogativeType.WHO_SUBJECT) {
+				&& interrogative != InterrogativeType.WHO_SUBJECT
+				&& interrogative != InterrogativeType.WHAT_SUBJECT) {
 			
 			realisedElement.addComponents(realiseSubjects(phrase)
 					.getChildren());
