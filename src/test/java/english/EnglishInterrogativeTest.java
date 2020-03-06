@@ -37,9 +37,10 @@ public class EnglishInterrogativeTest {
         clause.setSubject(subject);
         clause.setVerb("think");
         clause.addComplement(pp);
+        clause.addComplement("working as a professor");
         clause.setFeature(Feature.INTERROGATIVE_TYPE, InterrogativeType.WHAT_OBJECT);
         String output = realiser.realiseSentence(clause);
-        collector.checkThat(output, equalTo("What do you think about John?"));
+        collector.checkThat(output, equalTo("What do you think about John working as a professor?"));
     }
 
     @Test
@@ -123,9 +124,10 @@ public class EnglishInterrogativeTest {
         pp.setObject("John");
         pp.setPreposition("about");
         clause.addComplement(pp);
+        clause.addComplement("in your home");
         clause.setFeature(Feature.INTERROGATIVE_TYPE, InterrogativeType.YES_NO);
         String output = realiser.realiseSentence(clause);
-        collector.checkThat(output, equalTo("Do you think about John?"));
+        collector.checkThat(output, equalTo("Do you think about John in your home?"));
     }
 
     @Test
