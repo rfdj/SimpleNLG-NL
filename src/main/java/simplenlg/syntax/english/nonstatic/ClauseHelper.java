@@ -20,18 +20,14 @@ package simplenlg.syntax.english.nonstatic;
 
 import gov.nih.nlm.nls.lvg.Util.In;
 import simplenlg.features.*;
-import simplenlg.framework.InflectedWordElement;
-import simplenlg.framework.LexicalCategory;
-import simplenlg.framework.ListElement;
-import simplenlg.framework.NLGElement;
-import simplenlg.framework.PhraseElement;
-import simplenlg.framework.NLGFactory;
-import simplenlg.framework.WordElement;
+import simplenlg.framework.*;
 import simplenlg.phrasespec.AdvPhraseSpec;
 import simplenlg.phrasespec.SPhraseSpec;
 import simplenlg.phrasespec.VPPhraseSpec;
 import simplenlg.syntax.AbstractClauseHelper;
 import simplenlg.syntax.english.SyntaxProcessor;
+
+import java.util.List;
 
 /**
  * <p>
@@ -169,6 +165,134 @@ public class ClauseHelper extends AbstractClauseHelper {
 			}
 		}
 		return splitVerb;
+	}
+
+	/**
+	 * Adds the subjects to the beginning of the clause unless the clause is
+	 * infinitive, imperative or passive, the subjects split the verb or,
+	 * in French, the relative phrase discourse function is subject.
+	 *
+	 * @param phrase
+	 *            the <code>PhraseElement</code> representing this clause.
+	 * @param realisedElement
+	 *            the current realisation of the clause.
+	 * @param splitVerb
+	 *            an <code>NLGElement</code> representing the subjects that
+	 *            should split the verb
+	 */
+	@Override
+	protected void addSubjectsToFront(PhraseElement phrase,
+									  ListElement realisedElement,
+									  NLGElement splitVerb) {
+
+		if (!phrase.hasRelativePhrase(DiscourseFunction.SUBJECT)) {
+			if(phrase.hasFeature(Feature.INTERROGATIVE_TYPE)){
+				ListElement realisedSubject = new ListElement(phrase);
+				//Realising subject to add later
+				super.addSubjectsToFront(phrase, realisedSubject,splitVerb);
+				if(this.moveSubjectAfterVerb(realisedElement,realisedSubject)){
+					return;
+				}
+			}
+			super.addSubjectsToFront(phrase, realisedElement, splitVerb);
+		}
+	}
+
+	/**
+	 * Method for adding the subject after the verb. Mainly used for interrogatives
+	 * @param realisedElement, the current list of realised elements
+	 * @param realisedSubject, the subject that has to go behind the verb, if no current subject is found
+	 */
+	private boolean moveSubjectAfterVerb(ListElement realisedElement, ListElement realisedSubject){
+		//Search for the subject in the sentence
+		List<NLGElement> alreadyRealisedElements = realisedElement.getChildren();
+		// Check if the sentence has children:
+		if(alreadyRealisedElements != null){
+			for(int vpIndex = 0; vpIndex < alreadyRealisedElements.size(); vpIndex++) {
+				//Get the children of each element
+				NLGElement alreadyRealisedElement = alreadyRealisedElements.get(vpIndex);
+				//Check if one of them is a subject, otherwise, check if one of the children is a subject
+				if (alreadyRealisedElement.hasFeature(InternalFeature.DISCOURSE_FUNCTION) && alreadyRealisedElement.getFeature(InternalFeature.DISCOURSE_FUNCTION).equals(DiscourseFunction.SUBJECT)) {
+					realisedSubject = (ListElement) alreadyRealisedElements.remove(vpIndex);
+					realisedElement.setComponents(alreadyRealisedElements);
+
+				}
+				else {
+					List<NLGElement> elementComponents = alreadyRealisedElement.getChildren();
+					//Check if there are children if we couldn't find a discourse function yet
+					if(elementComponents != null && !alreadyRealisedElement.hasFeature(InternalFeature.DISCOURSE_FUNCTION)){
+						for (int cIndex = 0; cIndex < elementComponents.size(); cIndex++) {
+							NLGElement component = elementComponents.get(cIndex);
+							//If a child is a subject, set it to the realisedSubject
+							List<NLGElement> parts = component.getChildren();
+							if(parts != null){
+								for(int partIndex = 0; partIndex < parts.size(); partIndex++){
+									NLGElement part = parts.get(partIndex);
+									if (part.hasFeature(InternalFeature.DISCOURSE_FUNCTION) && part.getFeature(InternalFeature.DISCOURSE_FUNCTION).equals(DiscourseFunction.SUBJECT)) {
+										realisedSubject = (ListElement) elementComponents.remove(cIndex);
+										((ListElement) alreadyRealisedElement).setComponents(elementComponents);
+										realisedElement.setComponents(alreadyRealisedElements);
+									}
+
+								}
+							}
+							if (component.hasFeature(InternalFeature.DISCOURSE_FUNCTION) && component.getFeature(InternalFeature.DISCOURSE_FUNCTION).equals(DiscourseFunction.SUBJECT)) {
+								if(elementComponents.size() > 0){
+									((ListElement) alreadyRealisedElement).setComponents(elementComponents);
+								}
+								realisedSubject = (ListElement) alreadyRealisedElements.remove(vpIndex);
+								realisedElement.setComponents(alreadyRealisedElements);
+							}
+						}
+					}
+
+				}
+			}
+			//Move the subject after the verb in the sentence
+			for(int vpIndex = 0; vpIndex < alreadyRealisedElements.size(); vpIndex++) {
+				//Get the children of each element
+				NLGElement alreadyRealisedElement = alreadyRealisedElements.get(vpIndex);
+				//Check if one of them is a VERB_PHRASE, otherwise, check if one of the children is a VERB_PHRASE
+				if (alreadyRealisedElement.getCategory().equalTo(PhraseCategory.VERB_PHRASE)){
+					List<NLGElement> elementComponents = alreadyRealisedElement.getChildren();
+					if(elementComponents != null){
+						for (int cIndex = 0; cIndex < elementComponents.size(); cIndex++) {
+							NLGElement component = elementComponents.get(cIndex);
+							//If a child is a VERB, add the realisedSubject after it
+							if (component.getCategory().equalTo(PhraseCategory.VERB_PHRASE) || component.getCategory().equalTo(LexicalCategory.VERB)) {
+								elementComponents.add(cIndex+1,realisedSubject);
+								((ListElement) alreadyRealisedElement).setComponents(elementComponents);
+								alreadyRealisedElements.set(vpIndex, alreadyRealisedElement);
+								realisedElement.setComponents(alreadyRealisedElements);
+								return true;
+							}
+						}
+					}
+					else{
+						alreadyRealisedElements.add(vpIndex+1,realisedSubject);
+						realisedElement.setComponents(alreadyRealisedElements);
+						return true;
+					}
+				}
+				else {
+					List<NLGElement> elementComponents = alreadyRealisedElement.getChildren();
+					if (elementComponents != null) {
+						for (int cIndex = 0; cIndex < elementComponents.size(); cIndex++) {
+							NLGElement component = elementComponents.get(cIndex);
+							//If a child is a VERB, add the realisedSubject after it
+							if (component.getCategory().equalTo(PhraseCategory.VERB_PHRASE) || component.getCategory().equalTo(LexicalCategory.VERB)) {
+								elementComponents.add(cIndex+1,realisedSubject);
+								((ListElement) alreadyRealisedElement).setComponents(elementComponents);
+								alreadyRealisedElements.set(vpIndex, alreadyRealisedElement);
+								realisedElement.setComponents(alreadyRealisedElements);
+								return true;
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	/**

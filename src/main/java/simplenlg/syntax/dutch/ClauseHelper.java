@@ -761,7 +761,6 @@ public class ClauseHelper extends simplenlg.syntax.english.nonstatic.ClauseHelpe
 					|| interrogativeType.equals(InterrogativeType.WHOSE))){
 					addObjectBeforeVerb(realisedElement);
 				}
-
 			}
 
 			//In these types of interrogatives, the subject is after the verb
